@@ -3,9 +3,12 @@ package com.logo.data;
 import java.util.Collection;
 import java.util.Date;
 
+import com.google.common.collect.Multimap;
 import com.logo.domain.DashboardNotification;
 import com.logo.domain.Movie;
 import com.logo.domain.MovieRevenue;
+import com.logo.domain.Reservation;
+import com.logo.domain.Resource;
 import com.logo.domain.Transaction;
 import com.logo.domain.User;
 
@@ -19,6 +22,8 @@ public interface DataProvider {
      * @return A Collection of most recent transactions.
      */
     Collection<Transaction> getRecentTransactions(int count);
+    Collection<Resource> getResources(int count);
+    Collection<Reservation> getRecentReservation(int count);
 
     /**
      * @param id

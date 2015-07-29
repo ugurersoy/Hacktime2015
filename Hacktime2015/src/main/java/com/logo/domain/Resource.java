@@ -8,7 +8,6 @@ public class Resource
 	private int capacity;
 	private String resourceTypeName;
 
-	private ResourceTypes resourceTypes;
 
 	public Resource()
 	{
@@ -22,7 +21,6 @@ public class Resource
 		this.title = title;
 		this.capacity = capacity;
 		this.resourceTypeName = resourceTypeName;
-		this.resourceTypes = resourceTypes;
 	}
 
 	public int getId()
@@ -53,16 +51,6 @@ public class Resource
 	public void setCapacity(int capacity)
 	{
 		this.capacity = capacity;
-	}
-
-	public ResourceTypes getResourceTypes()
-	{
-		return resourceTypes;
-	}
-
-	public void setResourceTypes(ResourceTypes resourceTypes)
-	{
-		this.resourceTypes = resourceTypes;
 	}
 
 	public String getResourceTypeName()

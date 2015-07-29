@@ -1,5 +1,6 @@
 package com.logo.view;
 
+import com.logo.view.browsers.ResourcesView;
 import com.logo.view.browsers.RezervationView;
 import com.logo.view.browsers.TransactionsView;
 import com.logo.view.dashboard.DashboardView;
@@ -11,7 +12,8 @@ public enum DashboardViewType {
     DASHBOARD("dashboard", DashboardView.class, FontAwesome.HOME, true), 
     TRANSACTIONS("transactions", TransactionsView.class, FontAwesome.TABLE, false),
     SCHEDULE("schedule", ScheduleView.class, FontAwesome.CALENDAR_O, false),
-    REZERVATION("reservation",RezervationView.class,FontAwesome.TABLE,false);
+    REZERVATION("reservation",RezervationView.class,FontAwesome.TABLE,false),
+	RESOURCES("resource",ResourcesView.class,FontAwesome.TABLE,false);
 	
 
     private final String viewName;
