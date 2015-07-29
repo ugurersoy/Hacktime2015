@@ -10,13 +10,17 @@ import java.util.Date;
 import java.util.Set;
 
 import org.vaadin.viritin.FilterableListContainer;
+import org.vaadin.viritin.form.AbstractForm.SavedHandler;
 
 import com.google.common.eventbus.Subscribe;
 import com.logo.HacktimeUI;
 import com.logo.domain.Reservation;
+import com.logo.domain.Resource;
 import com.logo.domain.Transaction;
 import com.logo.event.DashboardEvent.BrowserResizeEvent;
 import com.logo.event.DashboardEvent.TransactionReportEvent;
+import com.logo.ui.form.ReservationForm;
+import com.logo.ui.form.ResourcesForm;
 import com.logo.event.DashboardEventBus;
 import com.logo.rest.RestService;
 import com.logo.view.DashboardViewType;
@@ -53,6 +57,7 @@ import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings({ "serial", "unchecked" })
@@ -100,6 +105,57 @@ public final class ReservationView extends VerticalLayout implements View {
 		
 		grid.addComponent(buttonLayout,2,0);
 		grid.setComponentAlignment(buttonLayout, Alignment.TOP_RIGHT);
+		
+		
+		
+		createButton.addClickListener(new ClickListener()
+		{
+
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				ReservationForm reservationForm = new ReservationForm();
+				reservationForm.setEntity(new Reservation());
+				final Window popup = reservationForm.openInModalPopup();
+				reservationForm.setSavedHandler(new SavedHandler<Reservation>()
+				{
+
+					@Override
+					public void onSave(Reservation entity)
+					{
+						table.addItem(entity);
+						popup.close();
+						table.select(entity);
+						table.setCurrentPageFirstItemId(entity);
+					}
+				});
+			}
+		});
+		
+		updateButton.addClickListener(new ClickListener()
+		{
+			
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				Reservation reservation = (Reservation) table.getValue();
+				ReservationForm reservationForm = new ReservationForm();
+				reservationForm.setEntity(reservation);
+				final Window popup = reservationForm.openInModalPopup();
+				reservationForm.setSavedHandler(new SavedHandler<Reservation>()
+				{
+					@Override
+					public void onSave(Reservation entity) {
+						popup.close();
+						table.sort();
+						table.select(entity);
+						table.setCurrentPageFirstItemId(entity);
+					}
+				});
+			}
+		});
+
+		
 		
 		return grid;
 		
@@ -245,7 +301,7 @@ public final class ReservationView extends VerticalLayout implements View {
         table.addContainerProperty("id", Integer.class, null);
         table.addContainerProperty("name", String.class, "");
     	table.addContainerProperty("surname", String.class, "");
-    	table.addContainerProperty("resourcename", String.class, "");
+    	table.addContainerProperty("resourceName", String.class, "");
     	 table.addContainerProperty("begdate", Date.class, "");
      	table.addContainerProperty("enddate", Date.class, "");
      	table.addContainerProperty("status", int.class, "");
@@ -402,11 +458,11 @@ public final class ReservationView extends VerticalLayout implements View {
                         result = o1.getName().compareTo(o2.getName());
                     } else if ("surname".equals(sortContainerPropertyId)) {
                         result = o1.getSurname().compareTo(o2.getSurname());
-                    } else if ("resourcename".equals(sortContainerPropertyId)) {
+                    } else if ("resourceName".equals(sortContainerPropertyId)) {
                         result = o1.getResourceName().compareTo(o2.getResourceName());
-                    } else if ("begdate".equals(sortContainerPropertyId)) {
+                    } else if ("begDate".equals(sortContainerPropertyId)) {
                         result = o1.getBegDate().compareTo(o2.getBegDate());
-                    } else if ("enddate".equals(sortContainerPropertyId)) {
+                    } else if ("endDate".equals(sortContainerPropertyId)) {
                         result = o1.getEndDate().compareTo(o2.getEndDate());
                     } else if ("status".equals(sortContainerPropertyId)) {
                     	

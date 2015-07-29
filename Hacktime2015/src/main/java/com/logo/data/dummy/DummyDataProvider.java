@@ -43,6 +43,8 @@ import com.logo.domain.Reservation;
 import com.logo.domain.Transaction;
 import com.logo.domain.User;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.util.CurrentInstance;
 
 /**
@@ -608,6 +610,20 @@ public class DummyDataProvider implements DataProvider
 		for (int i = 0; i < num; i++)
 		{
 			reservations.putAll((long) i, new ArrayList<Reservation>());
+			
+			Label statusLabel = new Label(i+"");
+			
+			if(i==0)
+			{
+				statusLabel.setStyleName(ValoTheme.LABEL_FAILURE);
+			}else if(i==1)
+			{
+				statusLabel.setStyleName(ValoTheme.LABEL_SUCCESS);
+			}else
+			{
+				statusLabel.setStyleName(ValoTheme.LABEL_COLORED);
+			}
+			
 			reservations.get((long) i).add(new Reservation(i,i,"name"+i,"surname"+i,"resourcename"+i,cal.getTime(),cal.getTime()));
 
 		}
