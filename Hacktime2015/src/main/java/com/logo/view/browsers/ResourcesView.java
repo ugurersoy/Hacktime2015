@@ -25,6 +25,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -110,6 +111,30 @@ public final class ResourcesView extends VerticalLayout implements View
 				});
 			}
 		});
+		
+		updateButton.addClickListener(new ClickListener()
+		{
+			
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				ResourcesForm resourcesForm = new ResourcesForm();
+				resourcesForm.setEntity((Resource) table.getValue());
+				final Window popup = resourcesForm.openInModalPopup();
+				resourcesForm.setSavedHandler(new SavedHandler<Resource>()
+				{
+					@Override
+					public void onSave(Resource entity) {
+//						classroomService.save(entity);
+						popup.close();
+						table.sort();
+						table.select(entity);
+						table.setCurrentPageFirstItemId(entity);
+					
+					}
+				});
+			}
+		});
 
 		return grid;
 	}
@@ -126,11 +151,13 @@ public final class ResourcesView extends VerticalLayout implements View
 	private Component buildToolbar()
 	{
 		HorizontalLayout header = new HorizontalLayout();
+		header.setMargin(new MarginInfo(true, true, true, true));
 		header.addStyleName("viewheader");
+		header.setWidth("100%");
 		header.setSpacing(true);
 		Responsive.makeResponsive(header);
 
-		Label title = new Label("Kaynaklar");
+		Label title = new Label("Kaynak Listesi");
 		title.setSizeUndefined();
 		title.addStyleName(ValoTheme.LABEL_H1);
 		title.addStyleName(ValoTheme.LABEL_NO_MARGIN);
@@ -139,7 +166,14 @@ public final class ResourcesView extends VerticalLayout implements View
 		HorizontalLayout tools = new HorizontalLayout(buildFilter());
 		tools.setSpacing(true);
 		tools.addStyleName("toolbar");
-		header.addComponent(tools);
+		
+		GridLayout grid = new GridLayout(3, 3);
+		grid.setWidth("100%");
+
+		grid.addComponent(tools, 2, 0);
+		grid.setComponentAlignment(tools, Alignment.TOP_RIGHT);
+		
+		header.addComponent(grid);
 
 		return header;
 	}
