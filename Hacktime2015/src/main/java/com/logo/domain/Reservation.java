@@ -2,17 +2,23 @@ package com.logo.domain;
 
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class Reservation {
 	
+	@XmlElement(name="Id")
 	private int id;
-	
+	@XmlElement(name="Status")
 	private int status;
-	
+	@XmlElement(name="Name")
 	private String name;
+	@XmlElement(name="SurName")
 	private String surname;
+	@XmlElement(name="ResourceName")
 	private String resourceName;
-	
+	@XmlElement(name="BegDate")
 	private Date begDate;
+	@XmlElement(name="EndDate")
 	private Date endDate;
     
 	

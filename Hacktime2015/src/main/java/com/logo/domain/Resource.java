@@ -1,11 +1,18 @@
 package com.logo.domain;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class Resource
 {
-
+	@XmlElement(name="Id")
 	private int id;
+	@XmlElement(name="Title")
 	private String title;
+	@XmlElement(name="Capacity")
 	private int capacity;
+	@XmlElement(name="ResourceType")
+	private int resourceType;
+	@XmlElement(name="ResourceTypeName")
 	private String resourceTypeName;
 
 
@@ -52,6 +59,16 @@ public class Resource
 	{
 		this.capacity = capacity;
 	}
+	
+	public int getResourceType()
+	{
+		return resourceType;
+	}
+
+	public void setResourceType(int resourceType)
+	{
+		this.resourceType = resourceType;
+	}
 
 	public String getResourceTypeName()
 	{
@@ -61,6 +78,12 @@ public class Resource
 	public void setResourceTypeName(String resourceTypeName)
 	{
 		this.resourceTypeName = resourceTypeName;
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "{\"title\":\""+title+"\",\"capacity\":"+capacity+",resourceType:"+resourceType+"}";
 	}
 
 }

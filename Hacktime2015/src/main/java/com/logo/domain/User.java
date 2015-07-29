@@ -1,17 +1,18 @@
 package com.logo.domain;
 
+import javax.xml.bind.annotation.XmlElement;
 public final class User
 {
+	@XmlElement(name="Id")
 	private Long Id;
+	@XmlElement(name="Name")
 	private String name;
+	@XmlElement(name="SurName")
 	private String surName;
+	@XmlElement(name="Password")
 	private String password;
-	private String phoneNr;
-	private String role;
-	
-	private boolean isAdmin;
-	
-	private Firms firms;
+	@XmlElement(name="Email")
+	private String email;
 	
 	public User() {
 		super();
@@ -24,23 +25,8 @@ public final class User
 		this.name = name;
 		this.surName = surName;
 		this.password = password;
-		this.phoneNr = phoneNr;
-		this.role = role;
-		this.isAdmin = isAdmin;
-		this.firms = firms;
 	}
-	public Firms getFirms() {
-		return firms;
-	}
-	public void setFirms(Firms firms) {
-		this.firms = firms;
-	}
-	public String getRole() {
-		return role;
-	}
-	public void setRole(String role) {
-		this.role = role;
-	}
+
 	public Long getId() {
 		return Id;
 	}
@@ -64,18 +50,6 @@ public final class User
 	}
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	public String getPhoneNr() {
-		return phoneNr;
-	}
-	public void setPhoneNr(String phoneNr) {
-		this.phoneNr = phoneNr;
-	}
-	public boolean isAdmin() {
-		return isAdmin;
-	}
-	public void setAdmin(boolean isAdmin) {
-		this.isAdmin = isAdmin;
 	}
 	
 	

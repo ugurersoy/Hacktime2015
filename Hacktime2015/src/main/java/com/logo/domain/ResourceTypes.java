@@ -1,8 +1,12 @@
 package com.logo.domain;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class ResourceTypes {
 
+	@XmlElement(name="Id")
 	private Long id;
+	@XmlElement(name="Title")
 	private String title;
 	
 	

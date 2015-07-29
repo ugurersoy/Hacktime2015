@@ -2,15 +2,26 @@ package com.logo;
 
 import java.util.Locale;
 
+
+
+
+
+
+import javax.ws.rs.core.Response;
+
 import com.google.common.eventbus.Subscribe;
 import com.logo.data.DataProvider;
 import com.logo.data.dummy.DummyDataProvider;
+import com.logo.domain.Token;
+import com.logo.domain.TokenResponse;
 import com.logo.domain.User;
+import com.logo.domain.UserList;
 import com.logo.event.DashboardEvent.BrowserResizeEvent;
 import com.logo.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.logo.event.DashboardEvent.UserLoggedOutEvent;
 import com.logo.event.DashboardEvent.UserLoginRequestedEvent;
 import com.logo.event.DashboardEventBus;
+import com.logo.rest.RestService;
 import com.logo.view.LoginView;
 import com.logo.view.MainView;
 import com.vaadin.annotations.Theme;
@@ -53,7 +64,14 @@ public class HacktimeUI extends UI
 		addStyleName(ValoTheme.UI_WITH_MENU);
 
 		updateContent();
-
+		RestService.instance = new RestService();
+		Token token = new Token("password", "oner.kaya@logo.com.tr", 1, 1);
+		TokenResponse.instance = RestService.instance.getTokenResponse(token);
+//		
+//		UserList userList = service.getUserList();
+//		
+		//service.getForecast("Ankara");
+		
 		// Some views need to be aware of browser resize events so a
 		// BrowserResizeEvent gets fired to the event bus on every occasion.
 		Page.getCurrent().addBrowserWindowResizeListener(new BrowserWindowResizeListener()
@@ -69,7 +87,7 @@ public class HacktimeUI extends UI
 	private void updateContent()
 	{
 		User user = (User) VaadinSession.getCurrent().getAttribute(User.class.getName());
-		if (user != null && "admin".equals(user.getRole()))
+		if (user != null)
 		{
 			// Authenticated user
 			setContent(new MainView());

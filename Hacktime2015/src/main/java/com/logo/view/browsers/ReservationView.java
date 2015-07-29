@@ -18,6 +18,7 @@ import com.logo.domain.Transaction;
 import com.logo.event.DashboardEvent.BrowserResizeEvent;
 import com.logo.event.DashboardEvent.TransactionReportEvent;
 import com.logo.event.DashboardEventBus;
+import com.logo.rest.RestService;
 import com.logo.view.DashboardViewType;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Container.Filterable;
@@ -259,8 +260,7 @@ public final class ReservationView extends VerticalLayout implements View {
 
 
         table.setColumnReorderingAllowed(true);
-        table.setContainerDataSource(new TempReservationContainer(HacktimeUI
-                .getDataProvider().getRecentReservation(200)));
+        table.setContainerDataSource(new TempReservationContainer(RestService.instance.getReservationList().getReservations()));
         table.setSortContainerPropertyId("name");
         table.setSortAscending(false);
 

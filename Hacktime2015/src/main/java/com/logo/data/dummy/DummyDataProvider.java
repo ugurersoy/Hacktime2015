@@ -434,7 +434,7 @@ public class DummyDataProvider implements DataProvider
 		User user = new User();
 		user.setName("Osman");
 		user.setSurName("Canbaz");
-		user.setRole("admin");
+		//user.setRole("admin");
 		String email = user.getName().toLowerCase() + "." + user.getSurName().toLowerCase() + "@xyz"
 				 + ".com";
 //		user.setEmail(email.replaceAll(" ", ""));

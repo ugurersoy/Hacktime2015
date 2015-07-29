@@ -1,10 +1,14 @@
 package com.logo.ui.form;
 
+import java.util.ArrayList;
+
 import org.vaadin.viritin.form.AbstractForm;
 import org.vaadin.viritin.layouts.MFormLayout;
 
 import com.logo.component.ComboBoxBean;
 import com.logo.domain.Resource;
+import com.logo.domain.ResourceTypes;
+import com.logo.rest.RestService;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -16,7 +20,6 @@ public class ResourcesForm extends AbstractForm<Resource>
 	private static final long serialVersionUID = 1L;
 	private TextField title = new TextField("Kaynak Adı");
 	private TextField capacity = new TextField("Kapasite");
-	// private TextField resourceTypeName = new TextField("Kaynak Tipi");
 	private ComboBox resourceSelect;
 
 	@Override
@@ -24,18 +27,20 @@ public class ResourcesForm extends AbstractForm<Resource>
 	{
 		initMovieSelect();
 		// resourceSelect.setItemCaptionPropertyId("id");
+		title.setNullRepresentation("");
 		return new MFormLayout(title, capacity, resourceSelect, getToolbar()).withMargin(true);
 	}
 
 	private void initMovieSelect()
 	{
-		final BeanItemContainer<ComboBoxBean> container = new BeanItemContainer<ComboBoxBean>(ComboBoxBean.class);
-		container.addItem(new ComboBoxBean(1, "Mercury"));
-		container.addItem(new ComboBoxBean(2, "Venus"));
-		container.addItem(new ComboBoxBean(3, "Earth"));
-		container.addItem(new ComboBoxBean(4, "Mars"));
+		ArrayList<ResourceTypes> types = RestService.instance.getResourceTypes().getResourceTypes();
+		final BeanItemContainer<ResourceTypes> container = new BeanItemContainer<ResourceTypes>(ResourceTypes.class);
+		for(ResourceTypes item:types){
+			container.addItem(item);
+		}
+		
 		resourceSelect = new ComboBox("Kaynak Tipi", container);
-		resourceSelect.setItemCaptionPropertyId("value");
+		resourceSelect.setItemCaptionPropertyId("title");
 		resourceSelect.setImmediate(true);
 	}
 

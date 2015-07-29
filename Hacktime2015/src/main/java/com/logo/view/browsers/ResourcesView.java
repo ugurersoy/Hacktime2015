@@ -4,16 +4,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
+import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.viritin.FilterableListContainer;
 import org.vaadin.viritin.form.AbstractForm.SavedHandler;
 
 import com.google.common.eventbus.Subscribe;
-import com.logo.HacktimeUI;
 import com.logo.domain.Resource;
 import com.logo.event.DashboardEvent.BrowserResizeEvent;
 import com.logo.event.DashboardEventBus;
+import com.logo.rest.RestService;
 import com.logo.ui.form.ResourcesForm;
-import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Item;
@@ -40,6 +40,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
@@ -105,6 +106,7 @@ public final class ResourcesView extends VerticalLayout implements View
 					@Override
 					public void onSave(Resource entity)
 					{
+						RestService.instance.persistResource(entity);
 						table.addItem(entity);
 						popup.close();
 						table.select(entity);
@@ -133,6 +135,25 @@ public final class ResourcesView extends VerticalLayout implements View
 						table.sort();
 						table.select(entity);
 						table.setCurrentPageFirstItemId(entity);
+					}
+				});
+			}
+		});
+		
+		deleteButton.addClickListener(new ClickListener()
+		{
+			
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				ConfirmDialog.show(UI.getCurrent(), "Confirm", "Emin misiniz?", "Tamam", "İptal",new ConfirmDialog.Listener() {
+					
+					@Override
+					public void onClose(ConfirmDialog arg0) {
+						if(arg0.isConfirmed()){
+							RestService.instance.deleteResource(((Resource)table.getValue()).getId());
+							table.removeItem((Resource)table.getValue());
+						}
 					}
 				});
 			}
@@ -284,7 +305,7 @@ public final class ResourcesView extends VerticalLayout implements View
 
 		table.setColumnReorderingAllowed(true);
 		table.setContainerDataSource(
-				new TempTransactionsContainer((Collection<Resource>) HacktimeUI.getDataProvider().getResources(10)));
+				new TempTransactionsContainer(RestService.instance.getResourceList(2).getResources()));
 		table.setSortContainerPropertyId("title");
 		table.setSortAscending(false);
 
