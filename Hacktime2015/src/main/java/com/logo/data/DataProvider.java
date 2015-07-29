@@ -13,7 +13,7 @@ import com.logo.domain.Transaction;
 import com.logo.domain.User;
 
 /**
- * QuickTickets Dashboard backend API.
+ * QuickTickets Daasdasdasdasddasdshboard backend API.
  */
 public interface DataProvider {
     /**
