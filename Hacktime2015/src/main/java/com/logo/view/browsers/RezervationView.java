@@ -212,7 +212,7 @@ public final class RezervationView extends VerticalLayout implements View {
         table.setVisibleColumns("time", "country", "city", "theater", "room",
                 "title", "seats", "price");
         table.setColumnHeaders("Adı", "Soyadı", "Kaynak Adı", "Başlangıç Tarhihi", "Bitiş Tarihi",
-                "Drumu");
+                "Drumu","","");
 
         table.setFooterVisible(true);
         table.setColumnFooter("time", "Total");
