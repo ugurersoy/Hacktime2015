@@ -1,6 +1,7 @@
 package com.logo.view;
 
 import com.logo.view.dashboard.DashboardView;
+import com.logo.view.transactions.RezervationView;
 import com.logo.view.transactions.TransactionsView;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
@@ -9,7 +10,9 @@ import com.vaadin.server.Resource;
 public enum DashboardViewType {
     DASHBOARD("dashboard", DashboardView.class, FontAwesome.HOME, true), 
     TRANSACTIONS("transactions", TransactionsView.class, FontAwesome.TABLE, false),
-    SCHEDULE("schedule", ScheduleView.class, FontAwesome.CALENDAR_O, false);
+    SCHEDULE("schedule", ScheduleView.class, FontAwesome.CALENDAR_O, false),
+    REZERVATION("reservation",RezervationView.class,FontAwesome.TABLE,false);
+	
 
     private final String viewName;
     private final Class<? extends View> viewClass;
