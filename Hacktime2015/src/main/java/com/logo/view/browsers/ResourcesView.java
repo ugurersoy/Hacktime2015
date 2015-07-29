@@ -13,6 +13,7 @@ import com.logo.domain.Resource;
 import com.logo.event.DashboardEvent.BrowserResizeEvent;
 import com.logo.event.DashboardEventBus;
 import com.logo.ui.form.ResourcesForm;
+import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Item;
@@ -118,19 +119,18 @@ public final class ResourcesView extends VerticalLayout implements View
 			@Override
 			public void buttonClick(ClickEvent event)
 			{
+				Resource resource = (Resource) table.getValue();
 				ResourcesForm resourcesForm = new ResourcesForm();
-				resourcesForm.setEntity((Resource) table.getValue());
+				resourcesForm.setEntity(resource);
 				final Window popup = resourcesForm.openInModalPopup();
 				resourcesForm.setSavedHandler(new SavedHandler<Resource>()
 				{
 					@Override
 					public void onSave(Resource entity) {
-//						classroomService.save(entity);
 						popup.close();
 						table.sort();
 						table.select(entity);
 						table.setCurrentPageFirstItemId(entity);
-					
 					}
 				});
 			}
@@ -301,7 +301,6 @@ public final class ResourcesView extends VerticalLayout implements View
 
 		// Allow dragging items to the reports menu
 		table.setDragMode(TableDragMode.MULTIROW);
-		table.setMultiSelect(true);
 
 		table.addActionHandler(new TransactionsActionHandler());
 
