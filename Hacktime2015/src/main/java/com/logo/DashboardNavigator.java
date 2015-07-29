@@ -16,7 +16,7 @@ import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
 public class DashboardNavigator extends Navigator {
-
+//fıdfsdkfh
     // Provide a Google Analytics tracker id here
     private static final String TRACKER_ID = null;// "UA-658457-6";
     private GoogleAnalyticsTracker tracker;
