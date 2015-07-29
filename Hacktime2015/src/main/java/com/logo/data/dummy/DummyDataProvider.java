@@ -61,6 +61,7 @@ public class DummyDataProvider implements DataProvider
 	private static Multimap<Long, Transaction> transactions;
 	private static Multimap<Long, Resource> resources;
 	private static Multimap<Long, Reservation> reservations;
+	
 	private static Multimap<Long, MovieRevenue> revenue;
 
 	private static Random rand = new Random();
@@ -684,7 +685,4 @@ public class DummyDataProvider implements DataProvider
 			}
 		});
 	}
-
-	
-
 }
