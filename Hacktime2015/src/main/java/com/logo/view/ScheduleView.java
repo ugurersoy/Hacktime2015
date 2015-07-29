@@ -148,14 +148,14 @@ public final class ScheduleView extends CssLayout implements View
 				event.end = end;
 			}
 		});
-		calendar.setHandler(new BasicEventResizeHandler()
-		{
-			@Override
-			public void eventResize(final EventResize event)
-			{
-				Notification.show("You're not allowed to change the movie duration");
-			}
-		});
+//		calendar.setHandler(new BasicEventResizeHandler()
+//		{
+//			@Override
+//			public void eventResize(final EventResize event)
+//			{
+//				Notification.show("You're not allowed to change the movie duration");
+//			}
+//		});
 
 		java.util.Calendar initialView = java.util.Calendar.getInstance();
 		initialView.add(java.util.Calendar.DAY_OF_WEEK, -initialView.get(java.util.Calendar.DAY_OF_WEEK) + 1);
