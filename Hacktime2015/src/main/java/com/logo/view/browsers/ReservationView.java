@@ -36,10 +36,13 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -55,6 +58,10 @@ import com.vaadin.ui.themes.ValoTheme;
 public final class ReservationView extends VerticalLayout implements View {
 
     private final Table table;
+    private Button createButton;
+	private Button deleteButton;
+	private Button updateButton;
+    
 //    private Button createReport;
     private static final DateFormat DATEFORMAT = new SimpleDateFormat(
             "MM/dd/yyyy hh:mm:ss a");
@@ -63,6 +70,7 @@ public final class ReservationView extends VerticalLayout implements View {
             "resourcename", "status", "begdate", "enddate" };
 
     public ReservationView() {
+    	
         setSizeFull();
         addStyleName("reservation");
         DashboardEventBus.register(this);
@@ -70,10 +78,34 @@ public final class ReservationView extends VerticalLayout implements View {
         addComponent(buildToolbar());
 
         table = buildTable();
-        addComponent(table);
+        addComponents(table,createGridLayout());
         setExpandRatio(table, 1);
     }
-
+    
+    
+    private GridLayout createGridLayout(){
+    	createButton = new Button("Ekle");
+		createButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+		createButton.setIcon(FontAwesome.SAVE);
+		deleteButton = new Button("Sil");
+		deleteButton.setIcon(FontAwesome.TRASH_O);
+		deleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
+		updateButton = new Button("Güncelle");
+		updateButton.setIcon(FontAwesome.PENCIL);
+		
+		HorizontalLayout buttonLayout = new HorizontalLayout(createButton, deleteButton, updateButton);
+		GridLayout grid= new GridLayout(3,3);
+		grid.setWidth("100%");
+		
+		grid.addComponent(buttonLayout,2,0);
+		grid.setComponentAlignment(buttonLayout, Alignment.TOP_RIGHT);
+		
+		return grid;
+		
+		
+    }
+    
+   
     @Override
     public void detach() {
         super.detach();
@@ -86,19 +118,29 @@ public final class ReservationView extends VerticalLayout implements View {
         HorizontalLayout header = new HorizontalLayout();
         header.addStyleName("viewheader");
         header.setSpacing(true);
+        header.setWidth("100%");
+        header.setMargin(new MarginInfo(true, true, true, true));
         Responsive.makeResponsive(header);
 
         Label title = new Label("Rezervasyon Listesi");
         title.setSizeUndefined();
         title.addStyleName(ValoTheme.LABEL_H1);
         title.addStyleName(ValoTheme.LABEL_NO_MARGIN);
+//        title.setIcon(icon);
         header.addComponent(title);
 
 //        createReport = buildCreateReport();
         HorizontalLayout tools = new HorizontalLayout(buildFilter());
         tools.setSpacing(true);
         tools.addStyleName("toolbar");
-        header.addComponent(tools);
+       
+        GridLayout grid= new GridLayout(3,3);
+		grid.setWidth("100%");
+		
+		grid.addComponent(tools,2,0);
+		grid.setComponentAlignment(tools, Alignment.TOP_RIGHT);
+        
+        header.addComponent(grid);
 
         return header;
     }
@@ -138,7 +180,7 @@ public final class ReservationView extends VerticalLayout implements View {
                                 event.getText())
                                 || filterByProperty("surname", item,
                                         event.getText())
-                                || filterByProperty("resourcename", item,
+                                || filterByProperty("resourceName", item,
                                         event.getText());
 
                     }
@@ -147,7 +189,7 @@ public final class ReservationView extends VerticalLayout implements View {
                     public boolean appliesToProperty(final Object propertyId) {
                         if (propertyId.equals("name")
                                 || propertyId.equals("surname")
-                                || propertyId.equals("resourcename")) {
+                                || propertyId.equals("resourceName")) {
                             return true;
                         }
                         return false;
@@ -307,11 +349,11 @@ public final class ReservationView extends VerticalLayout implements View {
     }
 
     private class TransactionsActionHandler implements Handler {
-        private final Action report = new Action("Create Report");
+        private final Action report = new Action("Ekle");
 
-        private final Action discard = new Action("Discard");
+        private final Action discard = new Action("Sil");
 
-        private final Action details = new Action("Movie details");
+        private final Action details = new Action("Güncelle");
 
         @Override
         public void handleAction(final Action action, final Object sender,
