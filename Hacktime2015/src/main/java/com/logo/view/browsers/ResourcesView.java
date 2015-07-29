@@ -98,6 +98,7 @@ public final class ResourcesView extends VerticalLayout implements View
 				ResourcesForm resourceForm = new ResourcesForm();
 				resourceForm.setEntity(new Resource());
 				final Window popup = resourceForm.openInModalPopup();
+				popup.setWidth("40%");
 				resourceForm.setSavedHandler(new SavedHandler<Resource>()
 				{
 
@@ -123,6 +124,7 @@ public final class ResourcesView extends VerticalLayout implements View
 				ResourcesForm resourcesForm = new ResourcesForm();
 				resourcesForm.setEntity(resource);
 				final Window popup = resourcesForm.openInModalPopup();
+				popup.setWidth("40%");
 				resourcesForm.setSavedHandler(new SavedHandler<Resource>()
 				{
 					@Override
