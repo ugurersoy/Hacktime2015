@@ -88,17 +88,12 @@ public class DummyDataProvider implements DataProvider
 		// movies = loadMoviesData();
 		transactions = generateTransactionsData();
 		resources = generateResources(10);
-		reservations=generateRezervationData();
+		reservations=generateRezervationData(10);
 		revenue = countRevenues();
 	}
 	
 	
-	private void refreshStaticDataRezervation()
-	{
-		reservations=generateRezervationData();
-		
-		
-	}
+
 
 	/**
 	 * Get a list of movies currently playing in theaters.
@@ -346,52 +341,6 @@ public class DummyDataProvider implements DataProvider
 
 	}
 	
-	
-	
-	/**
-	 * Rezervasyon bilgilerini listeliyor
-	 *
-	 * @return
-	 */
-	private Multimap<Long, Reservation> generateRezervationData()
-	{
-		Multimap<Long, Reservation> result = MultimapBuilder.hashKeys().arrayListValues().build();
-
-		for (int i = 0; i < 10; i++)
-		{
-			result.putAll((long) i, new ArrayList<Reservation>());
-
-			Calendar cal = Calendar.getInstance();
-			int daysSubtractor = rand.nextInt(150) + 30;
-			cal.add(Calendar.DAY_OF_YEAR, -daysSubtractor);
-
-			Calendar lastDayOfWeek = Calendar.getInstance();
-			lastDayOfWeek.add(Calendar.DAY_OF_YEAR, Calendar.SATURDAY - cal.get(Calendar.DAY_OF_WEEK));
-
-			while (cal.before(lastDayOfWeek))
-			{
-
-				int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
-				if (hourOfDay > 10 && hourOfDay < 22)
-				{
-
-					Reservation reservation = new Reservation();
-					
-					reservation.setStatus(i);
-
-					
-
-
-					result.get((long)i).add(reservation);
-				}
-
-				cal.add(Calendar.SECOND, rand.nextInt(500000) + 5000);
-			}
-		}
-
-		return result;
-
-	}
 
 	/**
 	 * Create a list of dummy transactions
@@ -645,6 +594,26 @@ public class DummyDataProvider implements DataProvider
 			resources.get((long) i).add(new Resource(i, "Title " + i, i, "resourceTypeName", null));
 		}
 		return resources;
+	}
+	
+	/**
+	 * Rezervasyon bilgilerini listeliyor
+	 *
+	 * @return
+	 */
+	private Multimap<Long, Reservation> generateRezervationData(int num)
+	{
+		reservations = MultimapBuilder.hashKeys().arrayListValues().build();
+		Calendar cal = Calendar.getInstance();
+		for (int i = 0; i < num; i++)
+		{
+			reservations.putAll((long) i, new ArrayList<Reservation>());
+			reservations.get((long) i).add(new Reservation(i,i,"name"+i,"surname"+i,"resourcename"+i,cal.getTime(),cal.getTime()));
+
+		}
+
+		return reservations;
+
 	}
 
 	@Override
