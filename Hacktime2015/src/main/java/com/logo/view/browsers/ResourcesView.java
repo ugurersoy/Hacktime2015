@@ -5,12 +5,14 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.vaadin.viritin.FilterableListContainer;
+import org.vaadin.viritin.form.AbstractForm.SavedHandler;
 
 import com.google.common.eventbus.Subscribe;
 import com.logo.HacktimeUI;
 import com.logo.domain.Resource;
 import com.logo.event.DashboardEvent.BrowserResizeEvent;
 import com.logo.event.DashboardEventBus;
+import com.logo.ui.form.ResourcesForm;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Item;
@@ -18,8 +20,6 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
-import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
@@ -27,7 +27,10 @@ import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -36,6 +39,7 @@ import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings(
@@ -65,7 +69,7 @@ public final class ResourcesView extends VerticalLayout implements View
 		setExpandRatio(table, 1);
 	}
 
-	private HorizontalLayout createButtonLayout()
+	private GridLayout createButtonLayout()
 	{
 		createButton = new Button("Ekle");
 		createButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -75,11 +79,39 @@ public final class ResourcesView extends VerticalLayout implements View
 		deleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
 		updateButton = new Button("Güncelle");
 		updateButton.setIcon(FontAwesome.PENCIL);
+
 		HorizontalLayout buttonLayout = new HorizontalLayout(createButton, deleteButton, updateButton);
-		buttonLayout.setComponentAlignment(createButton, Alignment.TOP_RIGHT);
-		buttonLayout.setComponentAlignment(deleteButton, Alignment.TOP_RIGHT);
-		buttonLayout.setComponentAlignment(updateButton, Alignment.TOP_RIGHT);
-		return buttonLayout;
+		GridLayout grid = new GridLayout(3, 3);
+		grid.setWidth("100%");
+
+		grid.addComponent(buttonLayout, 2, 0);
+		grid.setComponentAlignment(buttonLayout, Alignment.TOP_RIGHT);
+
+		createButton.addClickListener(new ClickListener()
+		{
+
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				ResourcesForm resourceForm = new ResourcesForm();
+				resourceForm.setEntity(new Resource());
+				final Window popup = resourceForm.openInModalPopup();
+				resourceForm.setSavedHandler(new SavedHandler<Resource>()
+				{
+
+					@Override
+					public void onSave(Resource entity)
+					{
+						table.addItem(entity);
+						popup.close();
+						table.select(entity);
+						table.setCurrentPageFirstItemId(entity);
+					}
+				});
+			}
+		});
+
+		return grid;
 	}
 
 	@Override
