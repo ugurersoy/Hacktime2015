@@ -2,115 +2,81 @@ package com.logo.domain;
 
 public final class User
 {
+	private Long Id;
+	private String name;
+	private String surName;
+	private String password;
+	private String phoneNr;
 	private String role;
-	private String firstName;
-	private String lastName;
-	private String title;
-	private boolean male;
-	private String email;
-	private String location;
-	private String phone;
-	private Integer newsletterSubscription;
-	private String website;
-
-	public String getEmail()
-	{
-		return email;
+	
+	private boolean isAdmin;
+	
+	private Firms firms;
+	
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
-
-	public void setEmail(final String email)
-	{
-		this.email = email;
+	public User(Long id, String name, String surName, String password, String phoneNr, String role, boolean isAdmin,
+			Firms firms) {
+		super();
+		Id = id;
+		this.name = name;
+		this.surName = surName;
+		this.password = password;
+		this.phoneNr = phoneNr;
+		this.role = role;
+		this.isAdmin = isAdmin;
+		this.firms = firms;
 	}
-
-	public String getLocation()
-	{
-		return location;
+	public Firms getFirms() {
+		return firms;
 	}
-
-	public void setLocation(final String location)
-	{
-		this.location = location;
+	public void setFirms(Firms firms) {
+		this.firms = firms;
 	}
-
-	public String getPhone()
-	{
-		return phone;
-	}
-
-	public void setPhone(final String phone)
-	{
-		this.phone = phone;
-	}
-
-	public Integer getNewsletterSubscription()
-	{
-		return newsletterSubscription;
-	}
-
-	public void setNewsletterSubscription(final Integer newsletterSubscription)
-	{
-		this.newsletterSubscription = newsletterSubscription;
-	}
-
-	public String getWebsite()
-	{
-		return website;
-	}
-
-	public void setWebsite(final String website)
-	{
-		this.website = website;
-	}
-
-	public boolean isMale()
-	{
-		return male;
-	}
-
-	public void setMale(final boolean male)
-	{
-		this.male = male;
-	}
-
-	public String getTitle()
-	{
-		return title;
-	}
-
-	public void setTitle(final String title)
-	{
-		this.title = title;
-	}
-
-	public String getRole()
-	{
+	public String getRole() {
 		return role;
 	}
-
-	public void setRole(final String role)
-	{
+	public void setRole(String role) {
 		this.role = role;
 	}
-
-	public String getFirstName()
-	{
-		return firstName;
+	public Long getId() {
+		return Id;
 	}
-
-	public void setFirstName(final String firstName)
-	{
-		this.firstName = firstName;
+	public void setId(Long id) {
+		Id = id;
 	}
-
-	public String getLastName()
-	{
-		return lastName;
+	public String getName() {
+		return name;
 	}
-
-	public void setLastName(final String lastName)
-	{
-		this.lastName = lastName;
+	public void setName(String name) {
+		this.name = name;
 	}
-
+	public String getSurName() {
+		return surName;
+	}
+	public void setSurName(String surName) {
+		this.surName = surName;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getPhoneNr() {
+		return phoneNr;
+	}
+	public void setPhoneNr(String phoneNr) {
+		this.phoneNr = phoneNr;
+	}
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+	
+	
 }

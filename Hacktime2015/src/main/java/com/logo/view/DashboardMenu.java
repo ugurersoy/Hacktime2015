@@ -232,7 +232,7 @@ public final class DashboardMenu extends CustomComponent {
     @Subscribe
     public void updateUserName(final ProfileUpdatedEvent event) {
         User user = getCurrentUser();
-        settingsItem.setText(user.getFirstName() + " " + user.getLastName());
+        settingsItem.setText(user.getName() + " " + user.getSurName());
     }
 
     public final class ValoMenuItemButton extends Button {

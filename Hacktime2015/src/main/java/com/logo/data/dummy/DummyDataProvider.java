@@ -421,13 +421,13 @@ public class DummyDataProvider implements DataProvider
 	public User authenticate(String userName, String password)
 	{
 		User user = new User();
-		user.setFirstName("Osman");
-		user.setLastName("Canbaz");
+		user.setName("Osman");
+		user.setSurName("Canbaz");
 		user.setRole("admin");
-		String email = user.getFirstName().toLowerCase() + "." + user.getLastName().toLowerCase() + "@xyz"
+		String email = user.getName().toLowerCase() + "." + user.getSurName().toLowerCase() + "@xyz"
 				 + ".com";
-		user.setEmail(email.replaceAll(" ", ""));
-		user.setLocation("Çanakkale");
+//		user.setEmail(email.replaceAll(" ", ""));
+//		user.setLocation("Çanakkale");
 		return user;
 	}
 

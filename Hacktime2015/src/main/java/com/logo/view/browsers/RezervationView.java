@@ -117,59 +117,59 @@ public final class RezervationView extends VerticalLayout implements View {
 //        return createReport;
 //    }
 
-    private Component buildFilter() {
-        final TextField filter = new TextField();
-        filter.addTextChangeListener(new TextChangeListener() {
-            @Override
-            public void textChange(final TextChangeEvent event) {
-                Filterable data = (Filterable) table.getContainerDataSource();
-                data.removeAllContainerFilters();
-                data.addContainerFilter(new Filter() {
-                    @Override
-                    public boolean passesFilter(final Object itemId,
-                            final Item item) {
-
-                        if (event.getText() == null
-                                || event.getText().equals("")) {
-                            return true;
-                        }
-
-                        return filterByProperty("name", item,
-                                event.getText())
-                                || filterByProperty("surname", item,
-                                        event.getText())
-                                || filterByProperty("roomname", item,
-                                        event.getText());
-
-                    }
-
-                    @Override
-                    public boolean appliesToProperty(final Object propertyId) {
-                        if (propertyId.equals("country")
-                                || propertyId.equals("city")
-                                || propertyId.equals("title")) {
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-            }
-        });
-
-        filter.setInputPrompt("Filter");
-        filter.setIcon(FontAwesome.SEARCH);
-        filter.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-        filter.addShortcutListener(new ShortcutListener("Clear",
-                KeyCode.ESCAPE, null) {
-            @Override
-            public void handleAction(final Object sender, final Object target) {
-                filter.setValue("");
-                ((Filterable) table.getContainerDataSource())
-                        .removeAllContainerFilters();
-            }
-        });
-        return filter;
-    }
+//    private Component buildFilter() {
+//        final TextField filter = new TextField();
+//        filter.addTextChangeListener(new TextChangeListener() {
+//            @Override
+//            public void textChange(final TextChangeEvent event) {
+//                Filterable data = (Filterable) table.getContainerDataSource();
+//                data.removeAllContainerFilters();
+//                data.addContainerFilter(new Filter() {
+//                    @Override
+//                    public boolean passesFilter(final Object itemId,
+//                            final Item item) {
+//
+//                        if (event.getText() == null
+//                                || event.getText().equals("")) {
+//                            return true;
+//                        }
+//
+//                        return filterByProperty("name", item,
+//                                event.getText())
+//                                || filterByProperty("surname", item,
+//                                        event.getText())
+//                                || filterByProperty("roomname", item,
+//                                        event.getText());
+//
+//                    }
+//
+//                    @Override
+//                    public boolean appliesToProperty(final Object propertyId) {
+//                        if (propertyId.equals("country")
+//                                || propertyId.equals("city")
+//                                || propertyId.equals("title")) {
+//                            return true;
+//                        }
+//                        return false;
+//                    }
+//                });
+//            }
+//        });
+//
+//        filter.setInputPrompt("Filter");
+//        filter.setIcon(FontAwesome.SEARCH);
+//        filter.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+//        filter.addShortcutListener(new ShortcutListener("Clear",
+//                KeyCode.ESCAPE, null) {
+//            @Override
+//            public void handleAction(final Object sender, final Object target) {
+//                filter.setValue("");
+//                ((Filterable) table.getContainerDataSource())
+//                        .removeAllContainerFilters();
+//            }
+//        });
+//        return filter;
+//    }
 
     private Table buildTable() {
         final Table table = new Table() {
@@ -178,9 +178,13 @@ public final class RezervationView extends VerticalLayout implements View {
                     final Object colId, final Property<?> property) {
                 String result = super.formatPropertyValue(rowId, colId,
                         property);
+                
                 if (colId.equals("time")) {
-                    result = DATEFORMAT.format(((Date) property.getValue()));
-                } else if (colId.equals("price")) {
+                
+                	result = DATEFORMAT.format(((Date) property.getValue()));
+                
+                }
+                else if (colId.equals("price")) {
                     if (property != null && property.getValue() != null) {
                         return "$" + DECIMALFORMAT.format(property.getValue());
                     } else {
@@ -197,20 +201,20 @@ public final class RezervationView extends VerticalLayout implements View {
         table.setSelectable(true);
 
         table.setColumnCollapsingAllowed(true);
-        table.setColumnCollapsible("time", false);
+        table.setColumnCollapsible("name", false);
         table.setColumnCollapsible("price", false);
 
         table.setColumnReorderingAllowed(true);
         table.setContainerDataSource(new TempTransactionsContainer(HacktimeUI
                 .getDataProvider().getRecentTransactions(200)));
-        table.setSortContainerPropertyId("time");
+        table.setSortContainerPropertyId("name");
         table.setSortAscending(false);
 
         table.setColumnAlignment("seats", Align.RIGHT);
         table.setColumnAlignment("price", Align.RIGHT);
 
-        table.setVisibleColumns("time", "country", "city", "theater", "room",
-                "title", "seats", "price");
+        table.setVisibleColumns("name", "surname", "roomname", "begdate", "enddate",
+                "status", "seats", "price");
         table.setColumnHeaders("Adı", "Soyadı", "Kaynak Adı", "Başlangıç Tarhihi", "Bitiş Tarihi",
                 "Drumu","","");
 
@@ -264,6 +268,7 @@ public final class RezervationView extends VerticalLayout implements View {
                         .getBrowserWindowWidth() < 800);
             }
         }
+        
     }
 
     private boolean filterByProperty(final String prop, final Item item,
@@ -341,17 +346,17 @@ public final class RezervationView extends VerticalLayout implements View {
                 @Override
                 public int compare(final Transaction o1, final Transaction o2) {
                     int result = 0;
-                    if ("time".equals(sortContainerPropertyId)) {
+                    if ("name".equals(sortContainerPropertyId)) {
                         result = o1.getTime().compareTo(o2.getTime());
-                    } else if ("country".equals(sortContainerPropertyId)) {
+                    } else if ("surname".equals(sortContainerPropertyId)) {
                         result = o1.getCountry().compareTo(o2.getCountry());
-                    } else if ("city".equals(sortContainerPropertyId)) {
+                    } else if ("roomname".equals(sortContainerPropertyId)) {
                         result = o1.getCity().compareTo(o2.getCity());
-                    } else if ("theater".equals(sortContainerPropertyId)) {
+                    } else if ("begdate".equals(sortContainerPropertyId)) {
                         result = o1.getTheater().compareTo(o2.getTheater());
-                    } else if ("room".equals(sortContainerPropertyId)) {
+                    } else if ("enddate".equals(sortContainerPropertyId)) {
                         result = o1.getRoom().compareTo(o2.getRoom());
-                    } else if ("title".equals(sortContainerPropertyId)) {
+                    } else if ("status".equals(sortContainerPropertyId)) {
                         result = o1.getTitle().compareTo(o2.getTitle());
                     } else if ("seats".equals(sortContainerPropertyId)) {
                         result = new Integer(o1.getSeats()).compareTo(o2
