@@ -16,7 +16,7 @@ public class ResourcesForm extends AbstractForm<Resource>
 	private static final long serialVersionUID = 1L;
 	private TextField title = new TextField("Kaynak Adı");
 	private TextField capacity = new TextField("Kapasite");
-	private TextField resourceTypeName = new TextField("Kaynak Tipi");
+	// private TextField resourceTypeName = new TextField("Kaynak Tipi");
 	private ComboBox resourceSelect;
 
 	@Override
@@ -24,7 +24,7 @@ public class ResourcesForm extends AbstractForm<Resource>
 	{
 		initMovieSelect();
 		// resourceSelect.setItemCaptionPropertyId("id");
-		return new MFormLayout(title, capacity, resourceTypeName, resourceSelect, getToolbar()).withMargin(true);
+		return new MFormLayout(title, capacity, resourceSelect, getToolbar()).withMargin(true);
 	}
 
 	private void initMovieSelect()
@@ -34,7 +34,7 @@ public class ResourcesForm extends AbstractForm<Resource>
 		container.addItem(new ComboBoxBean(2, "Venus"));
 		container.addItem(new ComboBoxBean(3, "Earth"));
 		container.addItem(new ComboBoxBean(4, "Mars"));
-		resourceSelect = new ComboBox("Seçiniz", container);
+		resourceSelect = new ComboBox("Kaynak Tipi", container);
 		resourceSelect.setItemCaptionPropertyId("value");
 		resourceSelect.setImmediate(true);
 	}
