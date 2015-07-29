@@ -139,6 +139,7 @@ public final class ResourcesView extends VerticalLayout implements View
 		return grid;
 	}
 
+	
 	@Override
 	public void detach()
 	{
