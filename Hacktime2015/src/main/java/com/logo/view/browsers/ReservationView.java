@@ -60,7 +60,7 @@ public final class ReservationView extends VerticalLayout implements View {
             "MM/dd/yyyy hh:mm:ss a");
     private static final DecimalFormat DECIMALFORMAT = new DecimalFormat("#.##");
     private static final String[] DEFAULT_COLLAPSIBLE = { "name", "surname",
-            "roomname", "status", "begdate", "enddate" };
+            "resourcename", "status", "begdate", "enddate" };
 
     public ReservationView() {
         setSizeFull();
@@ -95,11 +95,10 @@ public final class ReservationView extends VerticalLayout implements View {
         header.addComponent(title);
 
 //        createReport = buildCreateReport();
-//        HorizontalLayout tools = new HorizontalLayout(buildFilter(),
-//                createReport);
-//        tools.setSpacing(true);
-//        tools.addStyleName("toolbar");
-//        header.addComponent(tools);
+        HorizontalLayout tools = new HorizontalLayout(buildFilter());
+        tools.setSpacing(true);
+        tools.addStyleName("toolbar");
+        header.addComponent(tools);
 
         return header;
     }
@@ -118,83 +117,96 @@ public final class ReservationView extends VerticalLayout implements View {
 //        return createReport;
 //    }
 
-//    private Component buildFilter() {
-//        final TextField filter = new TextField();
-//        filter.addTextChangeListener(new TextChangeListener() {
-//            @Override
-//            public void textChange(final TextChangeEvent event) {
-//                Filterable data = (Filterable) table.getContainerDataSource();
-//                data.removeAllContainerFilters();
-//                data.addContainerFilter(new Filter() {
-//                    @Override
-//                    public boolean passesFilter(final Object itemId,
-//                            final Item item) {
-//
-//                        if (event.getText() == null
-//                                || event.getText().equals("")) {
-//                            return true;
-//                        }
-//
-//                        return filterByProperty("name", item,
-//                                event.getText())
-//                                || filterByProperty("surname", item,
-//                                        event.getText())
-//                                || filterByProperty("roomname", item,
-//                                        event.getText());
-//
-//                    }
-//
-//                    @Override
-//                    public boolean appliesToProperty(final Object propertyId) {
-//                        if (propertyId.equals("country")
-//                                || propertyId.equals("city")
-//                                || propertyId.equals("title")) {
-//                            return true;
-//                        }
-//                        return false;
-//                    }
-//                });
-//            }
-//        });
-//
-//        filter.setInputPrompt("Filter");
-//        filter.setIcon(FontAwesome.SEARCH);
-//        filter.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-//        filter.addShortcutListener(new ShortcutListener("Clear",
-//                KeyCode.ESCAPE, null) {
-//            @Override
-//            public void handleAction(final Object sender, final Object target) {
-//                filter.setValue("");
-//                ((Filterable) table.getContainerDataSource())
-//                        .removeAllContainerFilters();
-//            }
-//        });
-//        return filter;
-//    }
+    private Component buildFilter() {
+        final TextField filter = new TextField();
+        filter.addTextChangeListener(new TextChangeListener() {
+            @Override
+            public void textChange(final TextChangeEvent event) {
+                Filterable data = (Filterable) table.getContainerDataSource();
+                data.removeAllContainerFilters();
+                data.addContainerFilter(new Filter() {
+                    @Override
+                    public boolean passesFilter(final Object itemId,
+                            final Item item) {
+
+                        if (event.getText() == null
+                                || event.getText().equals("")) {
+                            return true;
+                        }
+
+                        return filterByProperty("name", item,
+                                event.getText())
+                                || filterByProperty("surname", item,
+                                        event.getText())
+                                || filterByProperty("resourcename", item,
+                                        event.getText());
+
+                    }
+
+                    @Override
+                    public boolean appliesToProperty(final Object propertyId) {
+                        if (propertyId.equals("name")
+                                || propertyId.equals("surname")
+                                || propertyId.equals("resourcename")) {
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            }
+        });
+
+        filter.setInputPrompt("Filter");
+        filter.setIcon(FontAwesome.SEARCH);
+        filter.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+        filter.addShortcutListener(new ShortcutListener("Clear",
+                KeyCode.ESCAPE, null) {
+            @Override
+            public void handleAction(final Object sender, final Object target) {
+                filter.setValue("");
+                ((Filterable) table.getContainerDataSource())
+                        .removeAllContainerFilters();
+            }
+        });
+        return filter;
+    }
 
     private Table buildTable() {
-        final Table table = new Table() {
-            @Override
-            protected String formatPropertyValue(final Object rowId,
-                    final Object colId, final Property<?> property) {
-                String result = super.formatPropertyValue(rowId, colId,
-                        property);
-                
-                if (colId.equals("time")) {
-                
-                	result = DATEFORMAT.format(((Date) property.getValue()));
-                
-                }
-                else if (colId.equals("price")) {
-                    if (property != null && property.getValue() != null) {
-                        return "$" + DECIMALFORMAT.format(property.getValue());
-                    } else {
-                        return "";
-                    }
-                }
-                return result;
-            }
-        };
+        final Table table = new Table() ;
+//        {
+      
+//        	
+//        	@Override
+//            protected String formatPropertyValue(final Object rowId,
+//                    final Object colId, final Property<?> property) {
+//           
+//            	String result = super.formatPropertyValue(rowId, colId,
+//                        property);
+//                
+//                if (colId.equals("time")) {
+//                
+//                	result = DATEFORMAT.format(((Date) property.getValue()));
+//                
+//                }
+//                else if (colId.equals("price")) {
+//                    if (property != null && property.getValue() != null) {
+//                        return "$" + DECIMALFORMAT.format(property.getValue());
+//                    } else {
+//                        return "";
+//                    }
+//                }
+//                return result;
+//            }
+//        };
+        
+        table.addContainerProperty("id", Integer.class, null);
+        table.addContainerProperty("name", String.class, "");
+    	table.addContainerProperty("surname", String.class, "");
+    	table.addContainerProperty("resourcename", String.class, "");
+    	 table.addContainerProperty("begdate", Date.class, "");
+     	table.addContainerProperty("enddate", Date.class, "");
+     	table.addContainerProperty("status", int.class, "");
+    		
         table.setSizeFull();
         table.addStyleName(ValoTheme.TABLE_BORDERLESS);
         table.addStyleName(ValoTheme.TABLE_NO_HORIZONTAL_LINES);
@@ -202,22 +214,28 @@ public final class ReservationView extends VerticalLayout implements View {
         table.setSelectable(true);
 
         table.setColumnCollapsingAllowed(true);
-    
+
+
         table.setColumnReorderingAllowed(true);
         table.setContainerDataSource(new TempReservationContainer(HacktimeUI
                 .getDataProvider().getRecentReservation(200)));
         table.setSortContainerPropertyId("name");
         table.setSortAscending(false);
 
-       
 
-        table.setVisibleColumns("status");
-        table.setColumnHeaders(
+        table.setVisibleColumns("name", "surname", "resourceName", "begDate", "endDate",
+                "status");
+        table.setColumnHeaders("Adı", "Soyadı", "Kaynak Adı", "Başlangıç Tarhihi", "Bitiş Tarihi",
                 "Drumu");
 
         table.setFooterVisible(true);
-       
+//        table.setColumnFooter("time", "Total");
 
+//        table.setColumnFooter(
+//                "price",
+//                "$"
+//                        + DECIMALFORMAT.format(HacktimeUI.getDataProvider()
+//                                .getTotalSum()));
 
         // Allow dragging items to the reports menu
         table.setDragMode(TableDragMode.MULTIROW);
@@ -338,7 +356,17 @@ public final class ReservationView extends VerticalLayout implements View {
                 @Override
                 public int compare(final Reservation o1, final Reservation o2) {
                     int result = 0;
-                 if ("status".equals(sortContainerPropertyId)) {
+                    if ("name".equals(sortContainerPropertyId)) {
+                        result = o1.getName().compareTo(o2.getName());
+                    } else if ("surname".equals(sortContainerPropertyId)) {
+                        result = o1.getSurname().compareTo(o2.getSurname());
+                    } else if ("resourcename".equals(sortContainerPropertyId)) {
+                        result = o1.getResourceName().compareTo(o2.getResourceName());
+                    } else if ("begdate".equals(sortContainerPropertyId)) {
+                        result = o1.getBegDate().compareTo(o2.getBegDate());
+                    } else if ("enddate".equals(sortContainerPropertyId)) {
+                        result = o1.getEndDate().compareTo(o2.getEndDate());
+                    } else if ("status".equals(sortContainerPropertyId)) {
                     	
 //                        result = o1.getStatus()=o2.getStatus();
                     }

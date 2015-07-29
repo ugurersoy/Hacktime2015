@@ -4,35 +4,83 @@ import java.util.Date;
 
 public class Reservation {
 	
-	private Long id;
+	private int id;
 	
 	private int status;
 	
+	private String name;
+	private String surname;
+	private String resourceName;
+	
 	private Date begDate;
 	private Date endDate;
+    
 	
-	private User user;
-	private Resource resource;
+
 
 	
 	
+	public Reservation(int id, int status, String name, String surname, String resourceName, Date begDate,
+			Date endDate) {
+		super();
+		this.id = id;
+		this.status = status;
+		this.name = name;
+		this.surname = surname;
+		this.resourceName = resourceName;
+		this.begDate = begDate;
+		this.endDate = endDate;
+	}
+
+
+
 	public Reservation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Reservation(Long id, int status, Date begDate, Date endDate, User user, Resource resource) {
-		super();
-		this.id = id;
-		this.status = status;
-		this.begDate = begDate;
-		this.endDate = endDate;
-		this.user = user;
-		this.resource = resource;
+
+	
+	
+	public String getName() {
+		return name;
 	}
-	public Long getId() {
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+
+	public String getSurname() {
+		return surname;
+	}
+
+
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+
+
+	public String getResourceName() {
+		return resourceName;
+	}
+
+
+
+	public void setResourceName(String resourceName) {
+		this.resourceName = resourceName;
+	}
+
+
+
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public int getStatus() {
@@ -53,18 +101,7 @@ public class Reservation {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	public User getUser() {
-		return user;
-	}
-	public void setUser(User user) {
-		this.user = user;
-	}
-	public Resource getResource() {
-		return resource;
-	}
-	public void setResource(Resource resource) {
-		this.resource = resource;
-	}
+
 	
 
 }
