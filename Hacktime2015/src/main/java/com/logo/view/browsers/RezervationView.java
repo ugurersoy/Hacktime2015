@@ -1,4 +1,4 @@
-package com.logo.view.transactions;
+package com.logo.view.browsers;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;

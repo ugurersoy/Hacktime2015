@@ -1,8 +1,8 @@
 package com.logo.view;
 
+import com.logo.view.browsers.RezervationView;
+import com.logo.view.browsers.TransactionsView;
 import com.logo.view.dashboard.DashboardView;
-import com.logo.view.transactions.RezervationView;
-import com.logo.view.transactions.TransactionsView;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
