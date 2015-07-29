@@ -25,6 +25,8 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -42,7 +44,10 @@ public final class ResourcesView extends VerticalLayout implements View
 {
 
 	private final Table table;
-	// private Button createReport;
+	private Button createButton;
+	private Button deleteButton;
+	private Button updateButton;
+
 	private static final String[] DEFAULT_COLLAPSIBLE =
 	{ "title", "capacity", "resourceTypeName" };
 
@@ -55,8 +60,26 @@ public final class ResourcesView extends VerticalLayout implements View
 		addComponent(buildToolbar());
 
 		table = buildTable();
-		addComponent(table);
+
+		addComponents(table, createButtonLayout());
 		setExpandRatio(table, 1);
+	}
+
+	private HorizontalLayout createButtonLayout()
+	{
+		createButton = new Button("Ekle");
+		createButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+		createButton.setIcon(FontAwesome.SAVE);
+		deleteButton = new Button("Sil");
+		deleteButton.setIcon(FontAwesome.TRASH_O);
+		deleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
+		updateButton = new Button("Güncelle");
+		updateButton.setIcon(FontAwesome.PENCIL);
+		HorizontalLayout buttonLayout = new HorizontalLayout(createButton, deleteButton, updateButton);
+		buttonLayout.setComponentAlignment(createButton, Alignment.TOP_RIGHT);
+		buttonLayout.setComponentAlignment(deleteButton, Alignment.TOP_RIGHT);
+		buttonLayout.setComponentAlignment(updateButton, Alignment.TOP_RIGHT);
+		return buttonLayout;
 	}
 
 	@Override
@@ -119,7 +142,8 @@ public final class ResourcesView extends VerticalLayout implements View
 					@Override
 					public boolean appliesToProperty(final Object propertyId)
 					{
-						if (propertyId.equals("title") || propertyId.equals("capacity") || propertyId.equals("resourceTypeName"))
+						if (propertyId.equals("title") || propertyId.equals("capacity")
+								|| propertyId.equals("resourceTypeName"))
 						{
 							return true;
 						}
@@ -132,50 +156,53 @@ public final class ResourcesView extends VerticalLayout implements View
 		filter.setInputPrompt("Filter");
 		filter.setIcon(FontAwesome.SEARCH);
 		filter.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		filter.addShortcutListener(new ShortcutListener("Clear", KeyCode.ESCAPE, null)
-		{
-			@Override
-			public void handleAction(final Object sender, final Object target)
-			{
-				filter.setValue("");
-				((Filterable) table.getContainerDataSource()).removeAllContainerFilters();
-			}
-		});
+		// filter.addShortcutListener(new ShortcutListener("Clear",
+		// KeyCode.ESCAPE, null)
+		// {
+		// @Override
+		// public void handleAction(final Object sender, final Object target)
+		// {
+		// filter.setValue("");
+		// ((Filterable)
+		// table.getContainerDataSource()).removeAllContainerFilters();
+		// }
+		// });
 		return filter;
 	}
 
 	private Table buildTable()
 	{
 		final Table table = new Table();
-//		{
-//			@Override
-//			protected String formatPropertyValue(final Object rowId, final Object colId, final Property<?> property)
-//			{
-//				String result = super.formatPropertyValue(rowId, colId, property);
-//				if (colId.equals("time"))
-//				{
-//					result = DATEFORMAT.format(((Date) property.getValue()));
-//				}
-//				else if (colId.equals("price"))
-//				{
-//					if (property != null && property.getValue() != null)
-//					{
-//						return "$" + DECIMALFORMAT.format(property.getValue());
-//					}
-//					else
-//					{
-//						return "";
-//					}
-//				}
-//				return result;
-//			}
-//		};
-		
+		// {
+		// @Override
+		// protected String formatPropertyValue(final Object rowId, final Object
+		// colId, final Property<?> property)
+		// {
+		// String result = super.formatPropertyValue(rowId, colId, property);
+		// if (colId.equals("time"))
+		// {
+		// result = DATEFORMAT.format(((Date) property.getValue()));
+		// }
+		// else if (colId.equals("price"))
+		// {
+		// if (property != null && property.getValue() != null)
+		// {
+		// return "$" + DECIMALFORMAT.format(property.getValue());
+		// }
+		// else
+		// {
+		// return "";
+		// }
+		// }
+		// return result;
+		// }
+		// };
+
 		table.addContainerProperty("id", Integer.class, null);
 		table.addContainerProperty("title", String.class, "");
 		table.addContainerProperty("capacity", String.class, "");
 		table.addContainerProperty("resourceTypeName", String.class, "");
-		
+
 		table.setSizeFull();
 		table.addStyleName(ValoTheme.TABLE_BORDERLESS);
 		table.addStyleName(ValoTheme.TABLE_NO_HORIZONTAL_LINES);
@@ -183,8 +210,8 @@ public final class ResourcesView extends VerticalLayout implements View
 		table.setSelectable(true);
 
 		table.setColumnCollapsingAllowed(true);
-//		table.setColumnCollapsible("time", false);
-//		table.setColumnCollapsible("price", false);
+		// table.setColumnCollapsible("time", false);
+		// table.setColumnCollapsible("price", false);
 
 		table.setColumnReorderingAllowed(true);
 		table.setContainerDataSource(
@@ -281,23 +308,24 @@ public final class ResourcesView extends VerticalLayout implements View
 
 	private class TransactionsActionHandler implements Handler
 	{
-		private final Action report = new Action("Create Report");
+		private final Action newAciton = new Action("Ekle");
 
-		private final Action discard = new Action("Discard");
+		private final Action deleteAction = new Action("Sil");
 
-		private final Action details = new Action("Movie details");
+		private final Action updateAction = new Action("Güncelle");
 
 		@Override
 		public void handleAction(final Action action, final Object sender, final Object target)
 		{
-			// if (action == report) {
-			// createNewReportFromSelection();
-			// } else
-			if (action == discard)
+			if (action == newAciton)
 			{
 				Notification.show("Not implemented in this demo");
 			}
-			else if (action == details)
+			else if (action == deleteAction)
+			{
+				Notification.show("Not implemented in this demo");
+			}
+			else if (action == updateAction)
 			{
 				Item item = ((Table) sender).getItem(target);
 				if (item != null)
@@ -313,7 +341,7 @@ public final class ResourcesView extends VerticalLayout implements View
 		public Action[] getActions(final Object target, final Object sender)
 		{
 			return new Action[]
-			{ details, report, discard };
+			{ newAciton, deleteAction, updateAction };
 		}
 	}
 
