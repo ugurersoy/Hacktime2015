@@ -38,6 +38,7 @@ import com.logo.data.DataProvider;
 import com.logo.domain.DashboardNotification;
 import com.logo.domain.Movie;
 import com.logo.domain.MovieRevenue;
+import com.logo.domain.Reservation;
 import com.logo.domain.Transaction;
 import com.logo.domain.User;
 import com.vaadin.server.VaadinRequest;
@@ -57,6 +58,9 @@ public class DummyDataProvider implements DataProvider
 	private static Date lastDataUpdate;
 	// private static Collection<Movie> movies;
 	private static Multimap<Long, Transaction> transactions;
+	
+	private static Multimap<Long, Reservation> reservations;
+	
 	private static Multimap<Long, MovieRevenue> revenue;
 
 	private static Random rand = new Random();
@@ -82,7 +86,16 @@ public class DummyDataProvider implements DataProvider
 		// countryToCities = loadTheaterData();
 		// movies = loadMoviesData();
 		transactions = generateTransactionsData();
+		reservations=generateRezervationData();
 		revenue = countRevenues();
+	}
+	
+	
+	private void refreshStaticDataRezervation()
+	{
+		reservations=generateRezervationData();
+		
+		
 	}
 
 	/**
@@ -330,6 +343,53 @@ public class DummyDataProvider implements DataProvider
 		return countryToCities;
 
 	}
+	
+	
+	
+	/**
+	 * Rezervasyon bilgilerini listeliyor
+	 *
+	 * @return
+	 */
+	private Multimap<Long, Reservation> generateRezervationData()
+	{
+		Multimap<Long, Reservation> result = MultimapBuilder.hashKeys().arrayListValues().build();
+
+		for (int i = 0; i < 10; i++)
+		{
+			result.putAll((long) i, new ArrayList<Reservation>());
+
+			Calendar cal = Calendar.getInstance();
+			int daysSubtractor = rand.nextInt(150) + 30;
+			cal.add(Calendar.DAY_OF_YEAR, -daysSubtractor);
+
+			Calendar lastDayOfWeek = Calendar.getInstance();
+			lastDayOfWeek.add(Calendar.DAY_OF_YEAR, Calendar.SATURDAY - cal.get(Calendar.DAY_OF_WEEK));
+
+			while (cal.before(lastDayOfWeek))
+			{
+
+				int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
+				if (hourOfDay > 10 && hourOfDay < 22)
+				{
+
+					Reservation reservation = new Reservation();
+					
+					reservation.setStatus(i);
+
+					
+
+
+					result.get((long)i).add(reservation);
+				}
+
+				cal.add(Calendar.SECOND, rand.nextInt(500000) + 5000);
+			}
+		}
+
+		return result;
+
+	}
 
 	/**
 	 * Create a list of dummy transactions
@@ -431,6 +491,24 @@ public class DummyDataProvider implements DataProvider
 		return user;
 	}
 
+	
+	
+	@Override
+	public Collection<Reservation> getRecentReservation(int count) {
+		List<Reservation> orderedReservation= Lists.newArrayList(reservations.values());
+		
+//		Collections.sort(orderedReservation, new Comparator<Reservation>()
+//		{
+//			@Override
+//			public int compare(Reservation o1, Reservation o2)
+//			{
+//				return o2.getEndDate().compareTo(o1.getEndDate());
+//			}
+//		});
+		return orderedReservation.subList(0, Math.min(count, reservations.values().size() - 1));
+	}
+	
+	
 	@Override
 	public Collection<Transaction> getRecentTransactions(int count)
 	{
@@ -579,5 +657,7 @@ public class DummyDataProvider implements DataProvider
 			}
 		});
 	}
+
+
 
 }

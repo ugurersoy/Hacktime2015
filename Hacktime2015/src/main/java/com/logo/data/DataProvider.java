@@ -6,6 +6,7 @@ import java.util.Date;
 import com.logo.domain.DashboardNotification;
 import com.logo.domain.Movie;
 import com.logo.domain.MovieRevenue;
+import com.logo.domain.Reservation;
 import com.logo.domain.Transaction;
 import com.logo.domain.User;
 
@@ -19,6 +20,9 @@ public interface DataProvider {
      * @return A Collection of most recent transactions.
      */
     Collection<Transaction> getRecentTransactions(int count);
+    
+    
+    Collection<Reservation> getRecentReservation(int count);
 
     /**
      * @param id

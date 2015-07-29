@@ -2,7 +2,7 @@ package com.logo.domain;
 
 import java.util.Date;
 
-public class Rezervation {
+public class Reservation {
 	
 	private Long id;
 	
@@ -16,11 +16,11 @@ public class Rezervation {
 
 	
 	
-	public Rezervation() {
+	public Reservation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Rezervation(Long id, int status, Date begDate, Date endDate, User user, Resource resource) {
+	public Reservation(Long id, int status, Date begDate, Date endDate, User user, Resource resource) {
 		super();
 		this.id = id;
 		this.status = status;

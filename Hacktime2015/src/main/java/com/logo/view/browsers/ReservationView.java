@@ -13,6 +13,7 @@ import org.vaadin.viritin.FilterableListContainer;
 
 import com.google.common.eventbus.Subscribe;
 import com.logo.HacktimeUI;
+import com.logo.domain.Reservation;
 import com.logo.domain.Transaction;
 import com.logo.event.DashboardEvent.BrowserResizeEvent;
 import com.logo.event.DashboardEvent.TransactionReportEvent;
@@ -51,7 +52,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings({ "serial", "unchecked" })
-public final class RezervationView extends VerticalLayout implements View {
+public final class ReservationView extends VerticalLayout implements View {
 
     private final Table table;
 //    private Button createReport;
@@ -61,7 +62,7 @@ public final class RezervationView extends VerticalLayout implements View {
     private static final String[] DEFAULT_COLLAPSIBLE = { "name", "surname",
             "roomname", "status", "begdate", "enddate" };
 
-    public RezervationView() {
+    public ReservationView() {
         setSizeFull();
         addStyleName("reservation");
         DashboardEventBus.register(this);
@@ -201,31 +202,22 @@ public final class RezervationView extends VerticalLayout implements View {
         table.setSelectable(true);
 
         table.setColumnCollapsingAllowed(true);
-        table.setColumnCollapsible("name", false);
-        table.setColumnCollapsible("price", false);
-
+    
         table.setColumnReorderingAllowed(true);
-        table.setContainerDataSource(new TempTransactionsContainer(HacktimeUI
-                .getDataProvider().getRecentTransactions(200)));
+        table.setContainerDataSource(new TempReservationContainer(HacktimeUI
+                .getDataProvider().getRecentReservation(200)));
         table.setSortContainerPropertyId("name");
         table.setSortAscending(false);
 
-        table.setColumnAlignment("seats", Align.RIGHT);
-        table.setColumnAlignment("price", Align.RIGHT);
+       
 
-        table.setVisibleColumns("name", "surname", "roomname", "begdate", "enddate",
-                "status", "seats", "price");
-        table.setColumnHeaders("Adı", "Soyadı", "Kaynak Adı", "Başlangıç Tarhihi", "Bitiş Tarihi",
-                "Drumu","","");
+        table.setVisibleColumns("status");
+        table.setColumnHeaders(
+                "Drumu");
 
         table.setFooterVisible(true);
-        table.setColumnFooter("time", "Total");
+       
 
-        table.setColumnFooter(
-                "price",
-                "$"
-                        + DECIMALFORMAT.format(HacktimeUI.getDataProvider()
-                                .getTotalSum()));
 
         // Allow dragging items to the reports menu
         table.setDragMode(TableDragMode.MULTIROW);
@@ -328,11 +320,11 @@ public final class RezervationView extends VerticalLayout implements View {
         }
     }
 
-    private class TempTransactionsContainer extends
-            FilterableListContainer<Transaction> {
+    private class TempReservationContainer extends
+            FilterableListContainer<Reservation> {
 
-        public TempTransactionsContainer(
-                final Collection<Transaction> collection) {
+        public TempReservationContainer(
+                final Collection<Reservation> collection) {
             super(collection);
         }
 
@@ -342,28 +334,13 @@ public final class RezervationView extends VerticalLayout implements View {
         public void sort(final Object[] propertyId, final boolean[] ascending) {
             final boolean sortAscending = ascending[0];
             final Object sortContainerPropertyId = propertyId[0];
-            Collections.sort(getBackingList(), new Comparator<Transaction>() {
+            Collections.sort(getBackingList(), new Comparator<Reservation>() {
                 @Override
-                public int compare(final Transaction o1, final Transaction o2) {
+                public int compare(final Reservation o1, final Reservation o2) {
                     int result = 0;
-                    if ("name".equals(sortContainerPropertyId)) {
-                        result = o1.getTime().compareTo(o2.getTime());
-                    } else if ("surname".equals(sortContainerPropertyId)) {
-                        result = o1.getCountry().compareTo(o2.getCountry());
-                    } else if ("roomname".equals(sortContainerPropertyId)) {
-                        result = o1.getCity().compareTo(o2.getCity());
-                    } else if ("begdate".equals(sortContainerPropertyId)) {
-                        result = o1.getTheater().compareTo(o2.getTheater());
-                    } else if ("enddate".equals(sortContainerPropertyId)) {
-                        result = o1.getRoom().compareTo(o2.getRoom());
-                    } else if ("status".equals(sortContainerPropertyId)) {
-                        result = o1.getTitle().compareTo(o2.getTitle());
-                    } else if ("seats".equals(sortContainerPropertyId)) {
-                        result = new Integer(o1.getSeats()).compareTo(o2
-                                .getSeats());
-                    } else if ("price".equals(sortContainerPropertyId)) {
-                        result = new Double(o1.getPrice()).compareTo(o2
-                                .getPrice());
+                 if ("status".equals(sortContainerPropertyId)) {
+                    	
+//                        result = o1.getStatus()=o2.getStatus();
                     }
 
                     if (!sortAscending) {
