@@ -2,6 +2,8 @@ package com.logo.domain;
 
 import java.util.Date;
 
+import com.vaadin.ui.Label;
+
 public class Reservation {
 	
 	private int id;
@@ -14,6 +16,9 @@ public class Reservation {
 	
 	private Date begDate;
 	private Date endDate;
+	
+	private Label statusLabel;
+	
     
 	
 
@@ -32,7 +37,27 @@ public class Reservation {
 		this.endDate = endDate;
 	}
 
+	public Reservation(int id, Label statusLabel, String name, String surname, String resourceName, Date begDate,
+			Date endDate) {
+		super();
+		this.id = id;
+		this.statusLabel = statusLabel;
+		this.name = name;
+		this.surname = surname;
+		this.resourceName = resourceName;
+		this.begDate = begDate;
+		this.endDate = endDate;
+	}
 
+	
+	
+	public Label getStatusLabel() {
+		return statusLabel;
+	}
+
+	public void setStatusLabel(Label statusLabel) {
+		this.statusLabel = statusLabel;
+	}
 
 	public Reservation() {
 		super();
