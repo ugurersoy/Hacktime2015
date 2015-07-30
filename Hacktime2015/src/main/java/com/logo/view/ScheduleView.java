@@ -8,26 +8,27 @@ import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
 import com.logo.domain.Reservation;
+import com.logo.domain.ResourceTypes;
 import com.logo.event.DashboardEvent.BrowserResizeEvent;
 import com.logo.rest.RestService;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Calendar;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResize;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.MoveEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
-import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
-import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
@@ -35,21 +36,26 @@ public final class ScheduleView extends CssLayout implements View
 {
 	private Calendar calendar;
 	private final Component tray;
-
+	private int resourceTypeIndex = 1; 
 	public ScheduleView()
 	{
 		setSizeFull();
 		addStyleName("schedule");
 //		DashboardEventBus.register(this);
-
+		HorizontalLayout hz = new HorizontalLayout();
+		
 		TabSheet tabs = new TabSheet();
 		tabs.setSizeFull();
 		tabs.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
 		tabs.addComponent(buildCalendarView());
+		
+		
+		
 		addComponent(tabs);
 
 		tray = buildTray();
 		addComponent(tray);
+//		addComponent(grid);
 
 //		injectMovieCoverStyles();
 	}
@@ -88,7 +94,38 @@ public final class ScheduleView extends CssLayout implements View
 		VerticalLayout calendarLayout = new VerticalLayout();
 		calendarLayout.setCaption("Calendar");
 		calendarLayout.setMargin(true);
-
+		
+		
+		ArrayList<ResourceTypes> types = RestService.instance.getResourceTypes().getResourceTypes();
+		final BeanItemContainer<ResourceTypes> containertype = new BeanItemContainer<ResourceTypes>(ResourceTypes.class);
+		for(ResourceTypes item:types){
+			containertype.addItem(item);
+		}
+		ComboBox resourceTypeSelect = new ComboBox("Kaynak Tipleri", containertype);
+		resourceTypeSelect.setItemCaptionPropertyId("title");
+		resourceTypeSelect.setImmediate(true);
+		
+		resourceTypeSelect.addValueChangeListener(new ValueChangeListener()
+		{
+			
+			@Override
+			public void valueChange(ValueChangeEvent event)
+			{
+				ResourceTypes res = (ResourceTypes)event.getProperty().getValue();
+				resourceTypeIndex = res.getId();
+				MovieEventProvider mep = new MovieEventProvider();
+				mep.getEvents(null, null);
+				
+			}
+		});
+		
+		HorizontalLayout bottomLayout = new HorizontalLayout(resourceTypeSelect);
+		GridLayout grid= new GridLayout(3,3);
+		grid.setWidth("100%");
+		grid.addComponent(bottomLayout,2,0);
+		grid.setComponentAlignment(bottomLayout, Alignment.TOP_RIGHT);
+		calendarLayout.addComponent(grid);
+		
 		calendar = new Calendar(new MovieEventProvider());
 		calendar.setWidth(100.0f, Unit.PERCENTAGE);
 		calendar.setHeight(1000.0f, Unit.PIXELS);
@@ -106,40 +143,43 @@ public final class ScheduleView extends CssLayout implements View
 
 		calendar.setFirstVisibleHourOfDay(8);
 		calendar.setLastVisibleHourOfDay(7);
-
-		calendar.setHandler(new BasicEventMoveHandler()
-		{
-			@Override
-			public void eventMove(final MoveEvent event)
-			{
-				CalendarEvent calendarEvent = event.getCalendarEvent();
-				if (calendarEvent instanceof ReservationEvent)
-				{
-					ReservationEvent editableEvent = (ReservationEvent) calendarEvent;
-
-					Date newFromTime = event.getNewStart();
-
-					// Update event dates
-					long length = editableEvent.getEnd().getTime() - editableEvent.getStart().getTime();
-					setDates(editableEvent, newFromTime, new Date(newFromTime.getTime() + length));
-					setTrayVisible(true);
-				}
-			}
-
-			protected void setDates(final ReservationEvent event, final Date start, final Date end)
-			{
-				event.start = start;
-				event.end = end;
-			}
-		});
-		calendar.setHandler(new BasicEventResizeHandler()
-		{
-			@Override
-			public void eventResize(final EventResize event)
-			{
-				Notification.show("You're not allowed to change the movie duration");
-			}
-		});
+//		calendar.setTimeZone(TimeZone.getTimeZone("Europe/Istanbul"));
+//		TimeFormat tf = calendar.getTimeFormat();
+//		calendar.setTimeFormat(tf);
+		
+//		calendar.setHandler(new BasicEventMoveHandler()
+//		{
+//			@Override
+//			public void eventMove(final MoveEvent event)
+//			{
+//				CalendarEvent calendarEvent = event.getCalendarEvent();
+//				if (calendarEvent instanceof ReservationEvent)
+//				{
+//					ReservationEvent editableEvent = (ReservationEvent) calendarEvent;
+//
+//					Date newFromTime = event.getNewStart();
+//
+//					// Update event dates
+//					long length = editableEvent.getEnd().getTime() - editableEvent.getStart().getTime();
+//					setDates(editableEvent, newFromTime, new Date(newFromTime.getTime() + length));
+//					setTrayVisible(true);
+//				}
+//			}
+//
+//			protected void setDates(final ReservationEvent event, final Date start, final Date end)
+//			{
+//				event.start = start;
+//				event.end = end;
+//			}
+//		});
+//		calendar.setHandler(new BasicEventResizeHandler()
+//		{
+//			@Override
+//			public void eventResize(final EventResize event)
+//			{
+//				Notification.show("You're not allowed to change the movie duration");
+//			}
+//		});
 
 		java.util.Calendar initialView = java.util.Calendar.getInstance();
 		initialView.add(java.util.Calendar.DAY_OF_WEEK, -initialView.get(java.util.Calendar.DAY_OF_WEEK) + 1);
@@ -147,7 +187,7 @@ public final class ScheduleView extends CssLayout implements View
 
 		initialView.add(java.util.Calendar.DAY_OF_WEEK, 6);
 		calendar.setEndDate(initialView.getTime());
-
+		
 		return calendarLayout;
 	}
 
@@ -196,18 +236,18 @@ public final class ScheduleView extends CssLayout implements View
 		return tray;
 	}
 
-	private void setTrayVisible(final boolean visible)
-	{
-		final String styleReveal = "v-animate-reveal";
-		if (visible)
-		{
-			tray.addStyleName(styleReveal);
-		}
-		else
-		{
-			tray.removeStyleName(styleReveal);
-		}
-	}
+//	private void setTrayVisible(final boolean visible)
+//	{
+//		final String styleReveal = "v-animate-reveal";
+//		if (visible)
+//		{
+//			tray.addStyleName(styleReveal);
+//		}
+//		else
+//		{
+//			tray.removeStyleName(styleReveal);
+//		}
+//	}
 
 	@Subscribe
 	public void browserWindowResized(final BrowserResizeEvent event)
@@ -229,13 +269,13 @@ public final class ScheduleView extends CssLayout implements View
 		@Override
 		public List<CalendarEvent> getEvents(final Date startDate, final Date endDate)
 		{
-			// Transactions are dynamically fetched from the backend service when needed.
-			ArrayList<Reservation> reservations = RestService.instance.getScheduleList(1).getReservations();
+			ArrayList<Reservation> reservations = RestService.instance.getScheduleList(resourceTypeIndex).getReservations();
+			
 			List<CalendarEvent> result = new ArrayList<CalendarEvent>();
 			
 			for (Reservation reservation : reservations)
 			{
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd hh:MM:ss");
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				Date begDate = null;
 				Date endDate2 = null;
 				try
@@ -247,6 +287,9 @@ public final class ScheduleView extends CssLayout implements View
 				{
 					e.printStackTrace();
 				}
+				java.util.Calendar cal = java.util.Calendar.getInstance();
+				cal.add(java.util.Calendar.HOUR, 1);
+//				result.add(new ReservationEvent(java.util.Calendar.getInstance().getTime(), cal.getTime(), reservation));
 				result.add(new ReservationEvent(begDate, endDate2, reservation));
 			}
 			return result;
