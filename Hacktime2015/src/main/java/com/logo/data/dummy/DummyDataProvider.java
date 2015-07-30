@@ -34,6 +34,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.logo.HacktimeUI;
 import com.logo.data.DataProvider;
 import com.logo.domain.DashboardNotification;
 import com.logo.domain.Movie;
@@ -433,9 +434,10 @@ public class DummyDataProvider implements DataProvider
 	@Override
 	public User authenticate(String userName, String password)
 	{
+		
 		User user = new User();
-		user.setName("Osman");
-		user.setSurName("Canbaz");
+		user.setName(HacktimeUI.currentUser.getName());
+		user.setSurName(HacktimeUI.currentUser.getSurName());
 		//user.setRole("admin");
 		String email = user.getName().toLowerCase() + "." + user.getSurName().toLowerCase() + "@xyz"
 				 + ".com";

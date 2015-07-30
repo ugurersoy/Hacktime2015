@@ -123,6 +123,7 @@ public final class ReservationView extends VerticalLayout implements View {
 				res.setUserId(HacktimeUI.currentUser.getId());
 				reservationForm.setEntity(res);
 				final Window popup = reservationForm.openInModalPopup();
+				popup.setCaption("Rezervasyon Ekleme");
 				popup.setWidth("40%");
 				reservationForm.setSavedHandler(new SavedHandler<Reservation>()
 				{
@@ -151,6 +152,7 @@ public final class ReservationView extends VerticalLayout implements View {
 				reservationForm.setEntity(reservation);
 				final Window popup = reservationForm.openInModalPopup();
 				popup.setWidth("40%");
+				popup.setCaption("Rezervasyon Güncelleme");
 				reservationForm.setSavedHandler(new SavedHandler<Reservation>()
 				{
 					@Override
@@ -298,37 +300,12 @@ public final class ReservationView extends VerticalLayout implements View {
 
     private Table buildTable() {
         final Table table = new Table() ;
-//        {
-      
-//        	
-//        	@Override
-//            protected String formatPropertyValue(final Object rowId,
-//                    final Object colId, final Property<?> property) {
-//           
-//            	String result = super.formatPropertyValue(rowId, colId,
-//                        property);
-//                
-//                if (colId.equals("time")) {
-//                
-//                	result = DATEFORMAT.format(((Date) property.getValue()));
-//                
-//                }
-//                else if (colId.equals("price")) {
-//                    if (property != null && property.getValue() != null) {
-//                        return "$" + DECIMALFORMAT.format(property.getValue());
-//                    } else {
-//                        return "";
-//                    }
-//                }
-//                return result;
-//            }
-//        };
         
         table.addContainerProperty("id", Integer.class, null);
         table.addContainerProperty("name", String.class, "");
     	table.addContainerProperty("surname", String.class, "");
     	table.addContainerProperty("resourceName", String.class, "");
-    	 table.addContainerProperty("begdate", Date.class, "");
+    	table.addContainerProperty("begdate", Date.class, "");
      	table.addContainerProperty("enddate", Date.class, "");
      	table.addContainerProperty("status", int.class, "");
     		
@@ -363,28 +340,8 @@ public final class ReservationView extends VerticalLayout implements View {
                 "Durumu");
 
         table.setFooterVisible(true);
-//        table.setColumnFooter("time", "Total");
-
-//        table.setColumnFooter(
-//                "price",
-//                "$"
-//                        + DECIMALFORMAT.format(HacktimeUI.getDataProvider()
-//                                .getTotalSum()));
-
-        // Allow dragging items to the reports menu
         table.setDragMode(TableDragMode.MULTIROW);
-
         table.addActionHandler(new TransactionsActionHandler());
-
-//        table.addValueChangeListener(new ValueChangeListener() {
-//            @Override
-//            public void valueChange(final ValueChangeEvent event) {
-//                if (table.getValue() instanceof Set) {
-//                    Set<Object> val = (Set<Object>) table.getValue();
-//                    createReport.setEnabled(val.size() > 0);
-//                }
-//            }
-//        });
         table.setImmediate(true);
         if (empty) {
         	table.removeAllItems();

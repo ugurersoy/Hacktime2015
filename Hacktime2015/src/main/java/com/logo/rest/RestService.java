@@ -157,4 +157,10 @@ public class RestService {
 		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token())
 		.get(ReservationList.class);
     }
+    
+    public ReservationList getReservationsByUserAndStatus(int userId, int status){
+    	return target.path("reservationdetails/"+userId+"/UserCurrentReservations").queryParam("status", status)
+		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token())
+		.get(ReservationList.class);
+    }
 }
