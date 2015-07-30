@@ -2,17 +2,15 @@ package com.logo.view;
 
 import com.logo.view.browsers.ReservationView;
 import com.logo.view.browsers.ResourcesView;
-import com.logo.view.browsers.TransactionsView;
-import com.logo.view.dashboard.DashboardView;
+import com.logo.view.dashboard.CharCustom;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 
 public enum DashboardViewType {
-    DASHBOARD("dashboard", DashboardView.class, FontAwesome.HOME, true), 
-    TRANSACTIONS("transactions", TransactionsView.class, FontAwesome.TABLE, false),
+	DASHBOARD("dashboard", CharCustom.class, FontAwesome.HOME, true), 
     SCHEDULE("schedule", ScheduleView.class, FontAwesome.CALENDAR_O, false),
-    REZERVATION("reservation",ReservationView.class,FontAwesome.TABLE,false),
+    REZERVATION("reservation",ReservationView.class,FontAwesome.LIST,false),
 	RESOURCES("resource",ResourcesView.class,FontAwesome.TABLE,false);
 	
 
