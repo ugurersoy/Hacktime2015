@@ -70,7 +70,7 @@ public final class DashboardMenu extends CustomComponent {
     }
 
     private Component buildTitle() {
-        Label logo = new Label("Hacktime <strong>2015</strong>",
+        Label logo = new Label("Kitten <strong>Hacktime2015</strong>",
                 ContentMode.HTML);
         logo.setSizeUndefined();
         HorizontalLayout logoWrapper = new HorizontalLayout(logo);
