@@ -13,6 +13,7 @@ import org.vaadin.viritin.FilterableListContainer;
 
 import com.logo.HacktimeUI;
 import com.logo.domain.Reservation;
+import com.logo.domain.ResourceDashboard;
 import com.logo.event.DashboardEventBus;
 import com.logo.rest.RestService;
 import com.vaadin.addon.charts.Chart;
@@ -97,9 +98,11 @@ public class CharCustom extends VerticalLayout implements View
 
 		ArrayList<DataSeriesItem> dataS = new ArrayList<DataSeriesItem>();
 
-		for (int i = 0; i < 10; i++)
+		ArrayList<ResourceDashboard> resourceDashboards= RestService.instance.getResourceDashboardList().getResourceDashboards();
+		
+		for (int i=0;i<resourceDashboards.size();i++)
 		{
-			DataSeriesItem item = new DataSeriesItem("MSIE 6.0" + i, 10.85 + i, color(i));
+			DataSeriesItem item = new DataSeriesItem( resourceDashboards.get(i).getTitle(),resourceDashboards.get(i).getResourceCount(), color(i));
 
 			dataS.add(item);
 		}
