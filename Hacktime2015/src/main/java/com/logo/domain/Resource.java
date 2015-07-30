@@ -4,10 +4,14 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class Resource
 {
-	@XmlElement(name="ResourceId")
+	@XmlElement(name="Id")
 	private int id;
-	@XmlElement(name="ResourceTitle")
+	@XmlElement(name="ResourceId")
+	private int resourceId;
+	@XmlElement(name="Title")
 	private String title;
+	@XmlElement(name="ResourceTitle")
+	private String resourceTitle;
 	@XmlElement(name="Capacity")
 	private int capacity;
 	@XmlElement(name="ResourceType")
@@ -39,6 +43,16 @@ public class Resource
 	{
 		this.id = id;
 	}
+	
+	public int getResourceId()
+	{
+		return resourceId;
+	}
+
+	public void setResourceId(int id)
+	{
+		this.resourceId = id;
+	}
 
 	public String getTitle()
 	{
@@ -48,6 +62,16 @@ public class Resource
 	public void setTitle(String title)
 	{
 		this.title = title;
+	}
+	
+	public String getResourceTitle()
+	{
+		return resourceTitle;
+	}
+
+	public void setResourceTitle(String title)
+	{
+		this.resourceTitle = title;
 	}
 
 	public int getCapacity()
@@ -83,7 +107,7 @@ public class Resource
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "{\"title\":\""+title+"\",\"capacity\":"+capacity+",resourceType:"+resourceType+"}";
+		return "{\"title\":\""+title+"\",\"capacity\":"+capacity+",resourceTypeId:"+resourceType+"}";
 	}
 
 }

@@ -118,9 +118,13 @@ public class RestService {
     		post(Entity.entity(resource.toString() ,MediaType.APPLICATION_JSON_TYPE));
     }
     
-    public void persistReservation(Reservation reservation){
-    	getReservationsService().
-    		post(Entity.entity(reservation.toString() ,MediaType.APPLICATION_JSON_TYPE));
+    public boolean persistReservation(Reservation reservation){
+    	String message = getReservationsService().
+    		post(Entity.entity(reservation.toString() ,MediaType.APPLICATION_JSON_TYPE)).readEntity(String.class);
+    	if(message.contains("false")){
+    		return false;
+    	}
+    	return true;
     }
     
     public void deleteResource(int resourceId){

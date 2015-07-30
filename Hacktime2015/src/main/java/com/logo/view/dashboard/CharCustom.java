@@ -29,6 +29,8 @@ import com.vaadin.addon.charts.model.style.SolidColor;
 import com.vaadin.addon.charts.themes.ValoLightTheme;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.VerticalLayout;
@@ -46,18 +48,21 @@ public class CharCustom extends VerticalLayout implements View
 		setSizeFull();
 		addStyleName("char");
 		DashboardEventBus.register(this);
-
-		addComponents(createChart(), createTabelRezervation());
+		VerticalLayout hl = new VerticalLayout();
+		hl.addComponents(createChart(),createTabelRezervation());
+		addComponents(hl);
 
 	}
 
-	public static Chart createChart()
+	public static HorizontalLayout createChart()
 	{
 		rand = new Random(0);
-
+		HorizontalLayout hl = new HorizontalLayout();
 		Chart chart = new Chart(ChartType.PIE);
-
-		chart.setHeight("100%");
+		hl.addComponent(chart);
+		hl.setWidth("100%");
+//		chart.setHeight("100%");
+		hl.setMargin(new MarginInfo(false, false, false, false));
 		Configuration conf = chart.getConfiguration();
 
 		conf.setTitle("");
@@ -111,12 +116,11 @@ public class CharCustom extends VerticalLayout implements View
 		conf.setSeries(innerSeries, outerSeries);
 		chart.drawChart(conf);
 
-		return chart;
+		return hl;
 	}
 
 	private Table createTabelRezervation()
 	{
-
 		final Table table = new Table();
 
 		table.addContainerProperty("id", Integer.class, null);
