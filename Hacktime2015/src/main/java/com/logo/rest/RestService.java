@@ -10,6 +10,8 @@ import javax.ws.rs.core.MediaType;
 import com.logo.domain.Reservation;
 import com.logo.domain.ReservationList;
 import com.logo.domain.Resource;
+import com.logo.domain.ResourceDashboard;
+import com.logo.domain.ResourceDashboardList;
 import com.logo.domain.ResourceList;
 import com.logo.domain.ResourceTypesList;
 import com.logo.domain.Token;
@@ -78,6 +80,12 @@ public class RestService {
     	return target.path("resourcetype")
         		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token());
     }
+    
+   private Builder getResourceDashboardService()
+   {
+	   return target.path("resourcedashboard")
+       		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token());
+   }
     
     public ReservationList getScheduleList(int resourceTypeId) {
     	return getScheduleService(resourceTypeId).
@@ -159,6 +167,13 @@ public class RestService {
         		get(ResourceTypesList.class);
     }
     
+   
+    public ResourceDashboardList getResourceDashboardList()
+    {
+    	return getResourceDashboardService()
+    			.get(ResourceDashboardList.class);
+    }
+    
     private Builder getScheduleService(int resourceTypeId){
     	return target.path("ReservationDetails/"+resourceTypeId+"/CurrentReservations").queryParam("resourceTypeId", resourceTypeId)
         		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token());
@@ -175,4 +190,5 @@ public class RestService {
 		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token())
 		.get(ReservationList.class);
     }
+    
 }
