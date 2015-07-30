@@ -123,6 +123,7 @@ public final class ReservationView extends VerticalLayout implements View {
 				res.setUserId(HacktimeUI.currentUser.getId());
 				reservationForm.setEntity(res);
 				final Window popup = reservationForm.openInModalPopup();
+				popup.setWidth("40%");
 				reservationForm.setSavedHandler(new SavedHandler<Reservation>()
 				{
 
@@ -149,6 +150,7 @@ public final class ReservationView extends VerticalLayout implements View {
 				ReservationForm reservationForm = new ReservationForm();
 				reservationForm.setEntity(reservation);
 				final Window popup = reservationForm.openInModalPopup();
+				popup.setWidth("40%");
 				reservationForm.setSavedHandler(new SavedHandler<Reservation>()
 				{
 					@Override
@@ -358,7 +360,7 @@ public final class ReservationView extends VerticalLayout implements View {
         table.setVisibleColumns("name", "surname", "resourceName", "begDate", "endDate",
                 "status");
         table.setColumnHeaders("Adı", "Soyadı", "Kaynak Adı", "Başlangıç Tarhihi", "Bitiş Tarihi",
-                "Drumu");
+                "Durumu");
 
         table.setFooterVisible(true);
 //        table.setColumnFooter("time", "Total");
