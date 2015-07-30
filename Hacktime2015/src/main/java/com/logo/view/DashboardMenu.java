@@ -2,7 +2,6 @@ package com.logo.view;
 
 import com.google.common.eventbus.Subscribe;
 import com.logo.HacktimeUI;
-import com.logo.component.ProfilePreferencesWindow;
 import com.logo.domain.User;
 import com.logo.event.DashboardEvent.NotificationsCountUpdatedEvent;
 import com.logo.event.DashboardEvent.PostViewChangeEvent;
@@ -11,7 +10,6 @@ import com.logo.event.DashboardEvent.ReportsCountUpdatedEvent;
 import com.logo.event.DashboardEvent.UserLoggedOutEvent;
 import com.logo.event.DashboardEventBus;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
@@ -92,22 +90,9 @@ public final class DashboardMenu extends CustomComponent {
         final MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
         final User user = getCurrentUser();
-        settingsItem = settings.addItem("", new ThemeResource(
-                "img/profile-pic-300px.jpg"), null);
+        
+        settingsItem = settings.addItem("", FontAwesome.USER, null);
         updateUserName(null);
-        settingsItem.addItem("Profil Güncelle", new Command() {
-            @Override
-            public void menuSelected(final MenuItem selectedItem) {
-                ProfilePreferencesWindow.open(user, false);
-            }
-        });
-//        settingsItem.addItem("Preferences", new Command() {
-//            @Override
-//            public void menuSelected(final MenuItem selectedItem) {
-//                ProfilePreferencesWindow.open(user, true);
-//            }
-//        });
-        settingsItem.addSeparator();
         settingsItem.addItem("Çıkış Yap", new Command() {
             @Override
             public void menuSelected(final MenuItem selectedItem) {
@@ -142,47 +127,12 @@ public final class DashboardMenu extends CustomComponent {
         for (final DashboardViewType view : DashboardViewType.values()) {
             Component menuItemComponent = new ValoMenuItemButton(view);
 
-//            if (view == DashboardViewType.REPORTS) {
-//                // Add drop target to reports button
-//                DragAndDropWrapper reports = new DragAndDropWrapper(
-//                        menuItemComponent);
-//                reports.setSizeUndefined();
-//                reports.setDragStartMode(DragStartMode.NONE);
-//                reports.setDropHandler(new DropHandler() {
-//
-//                    @Override
-//                    public void drop(final DragAndDropEvent event) {
-//                        UI.getCurrent()
-//                                .getNavigator()
-//                                .navigateTo(
-//                                        DashboardViewType.REPORTS.getViewName());
-//                        Table table = (Table) event.getTransferable()
-//                                .getSourceComponent();
-//                        DashboardEventBus.post(new TransactionReportEvent(
-//                                (Collection<Transaction>) table.getValue()));
-//                    }
-//
-//                    @Override
-//                    public AcceptCriterion getAcceptCriterion() {
-//                        return AcceptItem.ALL;
-//                    }
-//
-//                });
-//                menuItemComponent = reports;
-//            }
-
             if (view == DashboardViewType.DASHBOARD) {
                 notificationsBadge = new Label();
-                notificationsBadge.setId(NOTIFICATIONS_BADGE_ID);
+            
                 menuItemComponent = buildBadgeWrapper(menuItemComponent,
                         notificationsBadge);
             }
-//            if (view == DashboardViewType.REPORTS) {
-//                reportsBadge = new Label();
-//                reportsBadge.setId(REPORTS_BADGE_ID);
-//                menuItemComponent = buildBadgeWrapper(menuItemComponent,
-//                        reportsBadge);
-//            }
 
             menuItemsLayout.addComponent(menuItemComponent);
         }
@@ -194,7 +144,6 @@ public final class DashboardMenu extends CustomComponent {
             final Component badgeLabel) {
         CssLayout dashboardWrapper = new CssLayout(menuItemButton);
         dashboardWrapper.addStyleName("badgewrapper");
-        dashboardWrapper.addStyleName(ValoTheme.MENU_ITEM);
         badgeLabel.addStyleName(ValoTheme.MENU_BADGE);
         badgeLabel.setWidthUndefined();
         badgeLabel.setVisible(false);

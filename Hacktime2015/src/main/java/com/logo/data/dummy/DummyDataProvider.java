@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -559,7 +560,7 @@ public class DummyDataProvider implements DataProvider
 			@Override
 			public boolean apply(DashboardNotification input)
 			{
-				return !input.isRead();
+				return input.isRead();
 			}
 		};
 		return Collections2.filter(notifications, unreadPredicate).size();
@@ -611,20 +612,24 @@ public class DummyDataProvider implements DataProvider
 		{
 			reservations.putAll((long) i, new ArrayList<Reservation>());
 			
-			Label statusLabel = new Label(i+"");
+//			Label statusLabel = new Label(i+"");
 			
-			if(i==0)
-			{
-				statusLabel.setStyleName(ValoTheme.LABEL_FAILURE);
-			}else if(i==1)
-			{
-				statusLabel.setStyleName(ValoTheme.LABEL_SUCCESS);
-			}else
-			{
-				statusLabel.setStyleName(ValoTheme.LABEL_COLORED);
-			}
+//			if(i==0)
+//			{
+//				statusLabel.setStyleName(ValoTheme.LABEL_FAILURE);
+//			}else if(i==1)
+//			{
+//				statusLabel.setStyleName(ValoTheme.LABEL_SUCCESS);
+//			}else
+//			{
+//				statusLabel.setStyleName(ValoTheme.LABEL_COLORED);
+//			}
+//			
 			
-			reservations.get((long) i).add(new Reservation(i,statusLabel,"name"+i,"surname"+i,"resourcename"+i,cal.getTime(),cal.getTime()));
+			SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss", new Locale("tr"));
+
+			sdf.format(cal.getTime());
+			reservations.get((long) i).add(new Reservation(i,i,"name"+i,"surname"+i,"resourcename"+i,cal.getTime(),cal.getTime()));
 
 		}
 
@@ -669,5 +674,26 @@ public class DummyDataProvider implements DataProvider
 				return !input.getTime().before(startDate) && !input.getTime().after(endDate);
 			}
 		});
+	}
+
+	@Override
+	public Collection<Reservation> getReservationStatusWait() {
+	
+	   ArrayList<Reservation> list = new ArrayList<Reservation>();
+		 for(int i=0;i<10;i++)
+		 {
+			 Reservation item = new Reservation();
+			 item.setName("deneme"+1);
+			 item.setSurname("surname"+1);
+			 list.add(item);
+		 }
+		
+		return	list;
+	}
+
+	@Override
+	public Collection<Reservation> reserv() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

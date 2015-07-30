@@ -3,11 +3,14 @@ package com.logo.view.browsers;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Set;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 
 import org.vaadin.viritin.FilterableListContainer;
 import org.vaadin.viritin.form.AbstractForm.SavedHandler;
@@ -29,6 +32,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -122,6 +126,17 @@ public final class ReservationView extends VerticalLayout implements View {
 					@Override
 					public void onSave(Reservation entity)
 					{
+						Calendar begCal = Calendar.getInstance();
+						Calendar endCal=Calendar.getInstance();
+						begCal.setTime(entity.getBegDate());
+						endCal.setTime(entity.getEndDate());
+						
+						if(endCal.before(begCal))
+						{
+							Notification.show("Bitiş Tarihi Başlangıç Tarihinden önce Olamazz...", Type.ERROR_MESSAGE);
+							return;
+						}
+						
 						table.addItem(entity);
 						popup.close();
 						table.select(entity);
@@ -151,6 +166,16 @@ public final class ReservationView extends VerticalLayout implements View {
 						table.setCurrentPageFirstItemId(entity);
 					}
 				});
+			}
+		});
+		
+		deleteButton.addClickListener(new ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+   
+				table.removeItem(table.getValue());
+				
 			}
 		});
 
@@ -338,7 +363,6 @@ public final class ReservationView extends VerticalLayout implements View {
 
         // Allow dragging items to the reports menu
         table.setDragMode(TableDragMode.MULTIROW);
-        table.setMultiSelect(true);
 
         table.addActionHandler(new TransactionsActionHandler());
 
@@ -415,19 +439,62 @@ public final class ReservationView extends VerticalLayout implements View {
         @Override
         public void handleAction(final Action action, final Object sender,
                 final Object target) {
-//            if (action == report) {
-//                createNewReportFromSelection();
-//            } else 
+            if (action == report) {
+            	ReservationForm reservationForm = new ReservationForm();
+				reservationForm.setEntity(new Reservation());
+				final Window popup = reservationForm.openInModalPopup();
+				reservationForm.setSavedHandler(new SavedHandler<Reservation>()
+				{
+
+					@Override
+					public void onSave(Reservation entity)
+					{
+						Calendar begCal = Calendar.getInstance();
+						Calendar endCal=Calendar.getInstance();
+						begCal.setTime(entity.getBegDate());
+						endCal.setTime(entity.getEndDate());
+						
+						if(endCal.before(begCal))
+						{
+							Notification.show("Bitiş Tarihi Başlangıç Tarihinden önce Olamazz...", Type.ERROR_MESSAGE);
+							return;
+						}
+						
+						table.addItem(entity);
+						popup.close();
+						table.select(entity);
+						table.setCurrentPageFirstItemId(entity);
+					}
+				});
+            	
+            } else 
             if (action == discard) {
-                Notification.show("Not implemented in this demo");
+            	table.removeItem(table.getValue());
             } else if (action == details) {
-                Item item = ((Table) sender).getItem(target);
-                if (item != null) {
-                    Long movieId = (Long) item.getItemProperty("movieId")
-                            .getValue();
-//                    MovieDetailsWindow.open(HacktimeUI.getDataProvider()
-//                            .getMovie(movieId), null, null);
-                }
+            	
+            	
+            	Reservation reservation = (Reservation) table.getValue();
+				ReservationForm reservationForm = new ReservationForm();
+				reservationForm.setEntity(reservation);
+				final Window popup = reservationForm.openInModalPopup();
+				reservationForm.setSavedHandler(new SavedHandler<Reservation>()
+				{
+					@Override
+					public void onSave(Reservation entity) {
+						popup.close();
+						table.sort();
+						table.select(entity);
+						table.setCurrentPageFirstItemId(entity);
+					}
+				});
+//            	
+//                Item item = ((Table) sender).getItem(target);
+//                if (item != null) {
+//                    Long movieId = (Long) item.getItemProperty("movieId")
+//                            .getValue();
+////                    MovieDetailsWindow.open(HacktimeUI.getDataProvider()
+////                            .getMovie(movieId), null, null);
+//                }
             }
         }
 

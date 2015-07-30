@@ -7,6 +7,7 @@ import com.logo.event.DashboardEventBus;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Responsive;
+import com.vaadin.shared.ui.AlignmentInfo.Bits;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -14,6 +15,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
@@ -24,6 +26,7 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings("serial")
 public class LoginView extends VerticalLayout {
 
+	
     public LoginView() {
         setSizeFull();
 
@@ -89,10 +92,29 @@ public class LoginView extends VerticalLayout {
 
         Label title = new Label(" Hacktime 2015");
         title.setSizeUndefined();
-        title.addStyleName(ValoTheme.LABEL_H3);
+        title.addStyleName(ValoTheme.LABEL_H1);
         title.addStyleName(ValoTheme.LABEL_LIGHT);
         labels.addComponent(title);
-        return labels;
+        
+        final GridLayout grid = new GridLayout(3, 3);
+
+         grid.setWidth("100%");
+         grid.setHeight("30%");
+         
+         grid.addComponent(welcome,1,1);
+         grid.setComponentAlignment(welcome,
+                 new Alignment(Bits.ALIGNMENT_TOP |
+                         Bits.ALIGNMENT_HORIZONTAL_CENTER));
+         
+         
+         grid.addComponent(title,1,2);
+         grid.setComponentAlignment(title,
+                 new Alignment(Bits.ALIGNMENT_BOTTOM |
+                         Bits.ALIGNMENT_HORIZONTAL_CENTER));
+         
+         
+        
+        return grid;
     }
 
 }
