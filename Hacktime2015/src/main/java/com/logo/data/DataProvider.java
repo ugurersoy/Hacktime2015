@@ -24,6 +24,7 @@ public interface DataProvider {
     Collection<Transaction> getRecentTransactions(int count);
     Collection<Resource> getResources(int count);
     Collection<Reservation> getRecentReservation(int count);
+    Collection<Reservation> getReservationStatusWait();
 
     /**
      * @param id

@@ -670,4 +670,19 @@ public class DummyDataProvider implements DataProvider
 			}
 		});
 	}
+
+	@Override
+	public Collection<Reservation> getReservationStatusWait() {
+	
+	   ArrayList<Reservation> list = new ArrayList<Reservation>();
+		 for(int i=0;i<10;i++)
+		 {
+			 Reservation item = new Reservation();
+			 item.setName("deneme"+1);
+			 item.setSurname("surname"+1);
+			 list.add(item);
+		 }
+		
+		return	list;
+	}
 }
