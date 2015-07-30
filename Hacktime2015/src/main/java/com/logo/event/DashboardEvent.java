@@ -2,7 +2,6 @@ package com.logo.event;
 
 import java.util.Collection;
 
-import com.logo.domain.Transaction;
 import com.logo.view.DashboardViewType;
 
 
@@ -53,17 +52,6 @@ public abstract class DashboardEvent {
 
     }
 
-    public static final class TransactionReportEvent {
-        private final Collection<Transaction> transactions;
-
-        public TransactionReportEvent(final Collection<Transaction> transactions) {
-            this.transactions = transactions;
-        }
-
-        public Collection<Transaction> getTransactions() {
-            return transactions;
-        }
-    }
 
     public static final class PostViewChangeEvent {
         private final DashboardViewType view;
