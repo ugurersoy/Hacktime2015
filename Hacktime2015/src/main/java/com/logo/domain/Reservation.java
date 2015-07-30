@@ -1,5 +1,7 @@
 package com.logo.domain;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -14,20 +16,23 @@ public class Reservation {
 	private String name;
 	@XmlElement(name="SurName")
 	private String surname;
-	@XmlElement(name="ResourceName")
+	@XmlElement(name="ResourceId")
+	private int resourceId;
+	@XmlElement(name="ResourceTitle")
 	private String resourceName;
-	@XmlElement(name="BegDate")
-	private Date begDate;
+	@XmlElement(name="BeginDate")
+	private String begDate;
 	@XmlElement(name="EndDate")
-	private Date endDate;
+	private String endDate;
+	private int userId;
     
 	
 
 
 	
 	
-	public Reservation(int id, int status, String name, String surname, String resourceName, Date begDate,
-			Date endDate) {
+	public Reservation(int id, int status, String name, String surname, String resourceName, String begDate,
+			String endDate) {
 		super();
 		this.id = id;
 		this.status = status;
@@ -95,17 +100,59 @@ public class Reservation {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	public Date getBegDate() {
+	public String getBegDate() {
 		return begDate;
 	}
-	public void setBegDate(Date begDate) {
+	public void setBegDate(String begDate) {
 		this.begDate = begDate;
 	}
-	public Date getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
-	public void setEndDate(Date endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
+	}
+	
+	public int getResourceId() {
+		return resourceId;
+	}
+
+
+
+	public void setResourceId(int resourceId) {
+		this.resourceId = resourceId;
+	}
+	
+	
+
+
+	public int getUserId() {
+		return userId;
+	}
+
+
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+		/*String beg="";
+		String end="";
+		try {
+			beg = dt.format(new SimpleDateFormat().parse(begDate));
+			end = dt.format(new SimpleDateFormat().parse(endDate));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		return "{\"status\":\""+status+"\",\"name\":\""+name+"\",\"surname\":\""+surname+"\",\"resourceId\":"+resourceId
+				+ ",\"beginDate\":\""+begDate+"\",\"endDate\":\""+ endDate +"\",\"userid\":"+userId+"}";
 	}
 
 	

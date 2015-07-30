@@ -13,7 +13,7 @@ public class Token implements Serializable{
 	@XmlElement(name="username")
 	private String username;
 	@XmlElement(name="password")
-	private int password;
+	private String password;
 	@XmlElement(name="branchcode")
 	private int branchcode;
 	
@@ -21,7 +21,7 @@ public class Token implements Serializable{
 		
 	}
 	
-	public Token(String grant_type, String username, int password, int branchcode){
+	public Token(String grant_type, String username, String password, int branchcode){
 		this.grant_type = grant_type;
 		this.username = username;
 		this.password = password;
@@ -40,10 +40,10 @@ public class Token implements Serializable{
 	public void setUserName(String username) {
 		this.username = username;
 	}
-	public int getPassword() {
+	public String getPassword() {
 		return password;
 	}
-	public void setPassword(int password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 	public int getBranchcode() {

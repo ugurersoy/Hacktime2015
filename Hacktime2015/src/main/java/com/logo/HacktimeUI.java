@@ -7,6 +7,8 @@ import java.util.Locale;
 
 
 
+
+
 import javax.ws.rs.core.Response;
 
 import com.google.common.eventbus.Subscribe;
@@ -34,8 +36,10 @@ import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringUI;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
@@ -48,6 +52,8 @@ public class HacktimeUI extends UI
 
 	private final DataProvider dataProvider = new DummyDataProvider();
 	private final DashboardEventBus dashboardEventbus = new DashboardEventBus();
+	
+	public static User currentUser;
 
 	public HacktimeUI()
 	{
@@ -63,10 +69,7 @@ public class HacktimeUI extends UI
 		Responsive.makeResponsive(this);
 		addStyleName(ValoTheme.UI_WITH_MENU);
 
-		updateContent();
-		RestService.instance = new RestService();
-		Token token = new Token("password", "oner.kaya@logo.com.tr", 1, 1);
-		TokenResponse.instance = RestService.instance.getTokenResponse(token);
+		updateContent(false);
 //		
 //		UserList userList = service.getUserList();
 //		
@@ -84,10 +87,10 @@ public class HacktimeUI extends UI
 		});
 	}
 
-	private void updateContent()
+	private void updateContent(boolean main)
 	{
-		User user = (User) VaadinSession.getCurrent().getAttribute(User.class.getName());
-		if (user != null)
+//		User user = (User) VaadinSession.getCurrent().getAttribute(User.class.getName());
+		if (main)
 		{
 			// Authenticated user
 			setContent(new MainView());
@@ -104,10 +107,32 @@ public class HacktimeUI extends UI
 	@Subscribe
 	public void userLoginRequested(final UserLoginRequestedEvent event)
 	{
-		DataProvider dataProvider = getDataProvider();
-		User user = dataProvider.authenticate(event.getUserName(), event.getPassword());
-		VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
-		updateContent();
+		RestService.instance = new RestService();
+		Token token = new Token("password", event.getUserName(),event.getPassword(), 1);
+		try{
+			TokenResponse.instance = RestService.instance
+					.getTokenResponse(token);
+
+			if (TokenResponse.instance != null) {
+				currentUser = RestService.instance
+						.getUserByName(TokenResponse.instance.getUserName());
+
+				DataProvider dataProvider = getDataProvider();
+				User user = dataProvider.authenticate(event.getUserName(),
+						event.getPassword());
+				VaadinSession.getCurrent().setAttribute(User.class.getName(),
+						user);
+				updateContent(true);
+			} else {
+				Notification.show("Hatalı Giriş", Type.ERROR_MESSAGE);
+				updateContent(false);
+			}
+		}
+		catch(javax.ws.rs.BadRequestException ex){
+			Notification.show("Hatalı Giriş", Type.ERROR_MESSAGE);
+			String message = ex.getResponse().readEntity(String.class);
+		}
+		
 	}
 
 	@Subscribe

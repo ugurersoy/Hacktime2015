@@ -3,12 +3,14 @@ package com.logo.view.browsers;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Set;
 
+import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.viritin.FilterableListContainer;
 import org.vaadin.viritin.form.AbstractForm.SavedHandler;
 
@@ -115,7 +117,11 @@ public final class ReservationView extends VerticalLayout implements View {
 			public void buttonClick(ClickEvent event)
 			{
 				ReservationForm reservationForm = new ReservationForm();
-				reservationForm.setEntity(new Reservation());
+				Reservation res = new Reservation();
+				res.setName(HacktimeUI.currentUser.getName());
+				res.setSurname(HacktimeUI.currentUser.getSurName());
+				res.setUserId(HacktimeUI.currentUser.getId());
+				reservationForm.setEntity(res);
 				final Window popup = reservationForm.openInModalPopup();
 				reservationForm.setSavedHandler(new SavedHandler<Reservation>()
 				{
@@ -123,6 +129,7 @@ public final class ReservationView extends VerticalLayout implements View {
 					@Override
 					public void onSave(Reservation entity)
 					{
+						RestService.instance.persistReservation(entity);
 						table.addItem(entity);
 						popup.close();
 						table.select(entity);
@@ -155,7 +162,24 @@ public final class ReservationView extends VerticalLayout implements View {
 			}
 		});
 
-		
+		deleteButton.addClickListener(new ClickListener()
+		{
+			
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				ConfirmDialog.show(UI.getCurrent(), "Confirm", "Emin misiniz?", "Tamam", "İptal",new ConfirmDialog.Listener() {
+					
+					@Override
+					public void onClose(ConfirmDialog arg0) {
+						if(arg0.isConfirmed()){
+							RestService.instance.deleteReservation(((Reservation)table.getValue()).getId());  
+							table.removeItem((Reservation)table.getValue());
+						}
+					}
+				});
+			}
+		});
 		
 		return grid;
 		
@@ -316,7 +340,12 @@ public final class ReservationView extends VerticalLayout implements View {
 
 
         table.setColumnReorderingAllowed(true);
-        table.setContainerDataSource(new TempReservationContainer(RestService.instance.getReservationList().getReservations()));
+        ArrayList<Reservation> reservations ;
+        if(HacktimeUI.currentUser.isAdmin())
+        	reservations = RestService.instance.getReservationList().getReservations();
+        else
+        	reservations = RestService.instance.getReservationsByUser(HacktimeUI.currentUser.getId()).getReservations();
+        table.setContainerDataSource(new TempReservationContainer(reservations));
         table.setSortContainerPropertyId("name");
         table.setSortAscending(false);
 
@@ -337,7 +366,6 @@ public final class ReservationView extends VerticalLayout implements View {
 
         // Allow dragging items to the reports menu
         table.setDragMode(TableDragMode.MULTIROW);
-        table.setMultiSelect(true);
 
         table.addActionHandler(new TransactionsActionHandler());
 

@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlElement;
 public class ResourceTypes {
 
 	@XmlElement(name="Id")
-	private Long id;
+	private int id;
 	@XmlElement(name="Title")
 	private String title;
 	
@@ -14,15 +14,15 @@ public class ResourceTypes {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public ResourceTypes(Long id, String title) {
+	public ResourceTypes(int id, String title) {
 		super();
 		this.id = id;
 		this.title = title;
 	}
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getTitle() {

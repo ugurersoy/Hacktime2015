@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlElement;
 public final class User
 {
 	@XmlElement(name="Id")
-	private Long Id;
+	private int Id;
 	@XmlElement(name="Name")
 	private String name;
 	@XmlElement(name="SurName")
@@ -13,12 +13,14 @@ public final class User
 	private String password;
 	@XmlElement(name="Email")
 	private String email;
+	@XmlElement(name="IsAdmin")
+	private boolean isAdmin;
 	
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public User(Long id, String name, String surName, String password, String phoneNr, String role, boolean isAdmin,
+	public User(int id, String name, String surName, String password, String phoneNr, String role, boolean isAdmin,
 			Firms firms) {
 		super();
 		Id = id;
@@ -27,10 +29,10 @@ public final class User
 		this.password = password;
 	}
 
-	public Long getId() {
+	public int getId() {
 		return Id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		Id = id;
 	}
 	public String getName() {
@@ -51,6 +53,11 @@ public final class User
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+	public void setIsAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
 	
 }

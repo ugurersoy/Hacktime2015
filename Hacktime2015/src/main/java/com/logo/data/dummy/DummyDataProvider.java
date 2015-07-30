@@ -624,7 +624,7 @@ public class DummyDataProvider implements DataProvider
 				statusLabel.setStyleName(ValoTheme.LABEL_COLORED);
 			}
 			
-			reservations.get((long) i).add(new Reservation(i,i,"name"+i,"surname"+i,"resourcename"+i,cal.getTime(),cal.getTime()));
+			reservations.get((long) i).add(new Reservation(i,i,"name"+i,"surname"+i,"resourcename"+i,"",""));
 
 		}
 
