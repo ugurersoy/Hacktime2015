@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import com.google.common.eventbus.Subscribe;
 import com.logo.domain.Reservation;
@@ -25,15 +27,10 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResize;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.MoveEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
-import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
-import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
@@ -46,23 +43,14 @@ public final class ScheduleView extends CssLayout implements View
 	{
 		setSizeFull();
 		addStyleName("schedule");
-//		DashboardEventBus.register(this);
-		HorizontalLayout hz = new HorizontalLayout();
 		
 		TabSheet tabs = new TabSheet();
 		tabs.setSizeFull();
 		tabs.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
 		tabs.addComponent(buildCalendarView());
-		
-		
-		
 		addComponent(tabs);
-
 		tray = buildTray();
 		addComponent(tray);
-//		addComponent(grid);
-
-//		injectMovieCoverStyles();
 	}
 
 //	@Override
@@ -149,6 +137,7 @@ public final class ScheduleView extends CssLayout implements View
 		calendar.setFirstVisibleHourOfDay(8);
 		calendar.setLastVisibleHourOfDay(7);
 //		calendar.setTimeZone(TimeZone.getTimeZone("Europe/Istanbul"));
+		calendar.setLocale(new Locale("tr", "TR"));
 //		TimeFormat tf = calendar.getTimeFormat();
 //		calendar.setTimeFormat(tf);
 		
