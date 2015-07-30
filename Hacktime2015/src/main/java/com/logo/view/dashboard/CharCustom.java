@@ -49,6 +49,7 @@ public class CharCustom extends VerticalLayout implements View
 		addStyleName("char");
 		DashboardEventBus.register(this);
 		VerticalLayout hl = new VerticalLayout();
+		hl.setImmediate(true);
 		hl.addComponents(createChart(),createTabelRezervation());
 		addComponents(hl);
 
@@ -64,7 +65,7 @@ public class CharCustom extends VerticalLayout implements View
 //		chart.setHeight("100%");
 		hl.setMargin(new MarginInfo(false, false, false, false));
 		Configuration conf = chart.getConfiguration();
-
+		chart.setImmediate(true);
 		conf.setTitle("");
 
 		YAxis yaxis = new YAxis();
@@ -129,7 +130,7 @@ public class CharCustom extends VerticalLayout implements View
 		table.addContainerProperty("resourceName", String.class, "");
 		table.addContainerProperty("begdate", Date.class, "");
 		table.addContainerProperty("enddate", Date.class, "");
-		table.addContainerProperty("status", int.class, "");
+		table.addContainerProperty("statuss", String.class, "");
 
 		table.setSizeFull();
 		table.addStyleName(ValoTheme.TABLE_BORDERLESS);
@@ -155,7 +156,7 @@ public class CharCustom extends VerticalLayout implements View
 		table.setSortContainerPropertyId("name");
 		table.setSortAscending(false);
 
-		table.setVisibleColumns("name", "surname", "resourceName", "begDate", "endDate", "status");
+		table.setVisibleColumns("name", "surname", "resourceName", "begDate", "endDate", "statuss");
 		table.setColumnHeaders("Adı", "Soyadı", "Kaynak Adı", "Başlangıç Tarhihi", "Bitiş Tarihi", "Durumu");
 
 		table.setFooterVisible(true);
