@@ -4,15 +4,15 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class Resource
 {
-	@XmlElement(name="Id")
+	@XmlElement(name="ResourceId")
 	private int id;
-	@XmlElement(name="Title")
+	@XmlElement(name="ResourceTitle")
 	private String title;
 	@XmlElement(name="Capacity")
 	private int capacity;
 	@XmlElement(name="ResourceType")
 	private int resourceType;
-	@XmlElement(name="ResourceTypeName")
+	@XmlElement(name="ResourceTypeTitle")
 	private String resourceTypeName;
 
 

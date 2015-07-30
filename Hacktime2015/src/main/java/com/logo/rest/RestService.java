@@ -107,6 +107,12 @@ public class RestService {
         		get(ResourceList.class);
     }
     
+    public ResourceList getResourceListDetail() {
+    	return target.path("resourcedetails")
+    		   .request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token())
+        	   .get(ResourceList.class);
+    }
+    
     public void persistResource(Resource resource){
     	getResourceService().
     		post(Entity.entity(resource.toString() ,MediaType.APPLICATION_JSON_TYPE));
@@ -190,5 +196,4 @@ public class RestService {
 		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token())
 		.get(ReservationList.class);
     }
-    
 }

@@ -307,7 +307,7 @@ public final class ResourcesView extends VerticalLayout implements View
 
 		table.setColumnReorderingAllowed(true);
 		table.setContainerDataSource(
-				new TempTransactionsContainer(RestService.instance.getResourceList(2).getResources()));
+				new TempTransactionsContainer(RestService.instance.getResourceListDetail().getResources()));
 		table.setSortContainerPropertyId("title");
 		table.setSortAscending(false);
 
