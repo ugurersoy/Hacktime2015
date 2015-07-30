@@ -153,7 +153,7 @@ public class RestService {
     }
     
     public ReservationList getReservationsByUser(int userId){
-    	return target.path("reservations/"+userId+"/UserCurrentReservations")
+    	return target.path("reservationdetails/"+userId+"/UserCurrentReservations")
 		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token())
 		.get(ReservationList.class);
     }
