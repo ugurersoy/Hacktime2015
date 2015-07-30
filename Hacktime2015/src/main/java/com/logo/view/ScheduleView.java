@@ -97,7 +97,7 @@ public final class ScheduleView extends CssLayout implements View
 	private Component buildCalendarView()
 	{
 		VerticalLayout calendarLayout = new VerticalLayout();
-		calendarLayout.setCaption("Calendar");
+		calendarLayout.setCaption("Takvim");
 		calendarLayout.setMargin(true);
 		
 		

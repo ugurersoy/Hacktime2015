@@ -43,8 +43,8 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
-@Theme("valo")
-@Title("Hacktime 2015")
+@Theme("dashboard")
+@Title("Kitten - Hacktime 2015")
 @Widgetset("com.logo.LogoWidgetSet")
 @SpringUI(path = "logo")
 public class HacktimeUI extends UI

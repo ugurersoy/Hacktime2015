@@ -82,14 +82,31 @@ public class LoginView extends VerticalLayout {
     	CssLayout labels = new CssLayout();
         labels.addStyleName("labels");
 
-        Label welcome = new Label("Hoşgeldiniz");
+        Label welcome = new Label("Hacktime2015");
+        welcome.setSizeUndefined();
+        welcome.addStyleName(ValoTheme.LABEL_H4);
+        welcome.addStyleName(ValoTheme.LABEL_COLORED);
+        labels.addComponent(welcome);
+
+        Label title = new Label("Kitten");
+        title.setSizeUndefined();
+        title.addStyleName(ValoTheme.LABEL_H3);
+        title.addStyleName(ValoTheme.LABEL_LIGHT);
+        labels.addComponent(title);
+        return labels;
+        
+        /*
+    	CssLayout labels = new CssLayout();
+        labels.addStyleName("labels");
+
+        Label welcome = new Label("Hacktime 2015");
         welcome.setSizeUndefined();
         welcome.addStyleName(ValoTheme.LABEL_H4);
         welcome.addStyleName(ValoTheme.LABEL_COLORED);
         welcome.setLocale(new Locale("tr-TR"));
         labels.addComponent(welcome);
 
-        Label title = new Label(" Hacktime 2015");
+        Label title = new Label("Kitten");
         title.setSizeUndefined();
         title.addStyleName(ValoTheme.LABEL_H1);
         title.addStyleName(ValoTheme.LABEL_LIGHT);
@@ -113,7 +130,7 @@ public class LoginView extends VerticalLayout {
          
          
         
-        return grid;
+        return grid;*/
     }
 
 }
