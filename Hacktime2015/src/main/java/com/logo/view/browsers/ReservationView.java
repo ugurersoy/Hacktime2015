@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Set;
 
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.viritin.FilterableListContainer;
@@ -17,21 +16,13 @@ import org.vaadin.viritin.form.AbstractForm.SavedHandler;
 import com.google.common.eventbus.Subscribe;
 import com.logo.HacktimeUI;
 import com.logo.domain.Reservation;
-import com.logo.domain.Resource;
-import com.logo.domain.Transaction;
 import com.logo.event.DashboardEvent.BrowserResizeEvent;
-import com.logo.event.DashboardEvent.TransactionReportEvent;
-import com.logo.ui.form.ReservationForm;
-import com.logo.ui.form.ResourcesForm;
 import com.logo.event.DashboardEventBus;
 import com.logo.rest.RestService;
-import com.logo.view.DashboardViewType;
+import com.logo.ui.form.ReservationForm;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -53,8 +44,8 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.TableDragMode;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -69,6 +60,8 @@ public final class ReservationView extends VerticalLayout implements View {
     private Button createButton;
 	private Button deleteButton;
 	private Button updateButton;
+	private Button approveButton;
+	private Button disapproveButton;
     
 //    private Button createReport;
     private static final DateFormat DATEFORMAT = new SimpleDateFormat(
@@ -100,8 +93,18 @@ public final class ReservationView extends VerticalLayout implements View {
 		deleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
 		updateButton = new Button("Güncelle");
 		updateButton.setIcon(FontAwesome.PENCIL);
+		approveButton = new Button("Onayla");
+		approveButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		approveButton.setIcon(FontAwesome.THUMBS_UP);
+		disapproveButton = new Button("Reddet");
+		disapproveButton.setStyleName(ValoTheme.BUTTON_DANGER);
+		disapproveButton.setIcon(FontAwesome.THUMBS_DOWN);
 		
-		HorizontalLayout buttonLayout = new HorizontalLayout(createButton, deleteButton, updateButton);
+		HorizontalLayout buttonLayout;
+		if(HacktimeUI.currentUser.isAdmin())
+			buttonLayout = new HorizontalLayout(createButton, deleteButton, updateButton, approveButton, disapproveButton);
+		else
+			buttonLayout = new HorizontalLayout(createButton, deleteButton, updateButton);
 		GridLayout grid= new GridLayout(3,3);
 		grid.setWidth("100%");
 		
@@ -182,6 +185,74 @@ public final class ReservationView extends VerticalLayout implements View {
 						}
 					}
 				});
+			}
+		});
+		
+		approveButton.addClickListener(new ClickListener()
+		{
+			
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				final Reservation res = (Reservation)table.getValue();
+				if (res != null) {
+					if (res.getStatus() == 0) {
+						ConfirmDialog.show(UI.getCurrent(), "Confirm",
+								"Onaylansın mı?", "Tamam", "İptal",
+								new ConfirmDialog.Listener() {
+									@Override
+									public void onClose(ConfirmDialog arg0) {
+										if (arg0.isConfirmed()) {
+
+											RestService.instance
+													.approveReservation(res
+															.getId());
+											res.setStatus(1);
+											table.refreshRowCache();
+											Notification.show("İstek Onaylandı!!!",
+													Type.WARNING_MESSAGE);
+										}
+									}
+								});
+					} else {
+						Notification.show("İstek Onaylanamaz!!!",
+								Type.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
+		
+		disapproveButton.addClickListener(new ClickListener()
+		{
+			
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				final Reservation res = (Reservation)table.getValue();
+				if (res != null) {
+					if (res.getStatus() == 0) {
+						ConfirmDialog.show(UI.getCurrent(), "Confirm",
+								"Reddedilsin mi?", "Tamam", "İptal",
+								new ConfirmDialog.Listener() {
+									@Override
+									public void onClose(ConfirmDialog arg0) {
+										if (arg0.isConfirmed()) {
+
+											RestService.instance
+													.disapproveReservation(res
+															.getId());
+											res.setStatus(2);
+											table.refreshRowCache();
+											Notification.show("İstek Reddedildi!!!",
+													Type.WARNING_MESSAGE);
+										}
+									}
+								});
+					} else {
+						Notification.show("İstek Reddedilemez!!!",
+								Type.ERROR_MESSAGE);
+					}
+				}
 			}
 		});
 		
@@ -305,9 +376,9 @@ public final class ReservationView extends VerticalLayout implements View {
         table.addContainerProperty("name", String.class, "");
     	table.addContainerProperty("surname", String.class, "");
     	table.addContainerProperty("resourceName", String.class, "");
-    	table.addContainerProperty("begdate", Date.class, "");
+    	 table.addContainerProperty("begdate", Date.class, "");
      	table.addContainerProperty("enddate", Date.class, "");
-     	table.addContainerProperty("status", int.class, "");
+     	table.addContainerProperty("statuss", String.class, "");
     		
         table.setSizeFull();
         table.addStyleName(ValoTheme.TABLE_BORDERLESS);
@@ -335,7 +406,7 @@ public final class ReservationView extends VerticalLayout implements View {
 
 
         table.setVisibleColumns("name", "surname", "resourceName", "begDate", "endDate",
-                "status");
+                "statuss");
         table.setColumnHeaders("Adı", "Soyadı", "Kaynak Adı", "Başlangıç Tarhihi", "Bitiş Tarihi",
                 "Durumu");
 

@@ -119,6 +119,18 @@ public class RestService {
     		delete();
     }
     
+    public void approveReservation(int reservationId){
+    	target.path("reservations/"+reservationId+"/ApproveOrNot").queryParam("reservationId", reservationId).queryParam("isApprove", true)
+		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token())
+		.get();
+    }
+    
+    public void disapproveReservation(int reservationId){
+    	target.path("reservations/"+reservationId+"/ApproveOrNot").queryParam("reservationId", reservationId).queryParam("isApprove", false)
+		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token())
+		.get();
+    }
+    
     public ResourceList getResourceByType(int type){
     	return target.path("resources/"+type)
 		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token())

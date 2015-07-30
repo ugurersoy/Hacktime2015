@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class Reservation {
 	
+	private static String[] stats = {"Bekliyor", "Onaylandı", "Reddedildi"};
+	
 	@XmlElement(name="Id")
 	private int id;
 	@XmlElement(name="Status")
@@ -100,6 +102,11 @@ public class Reservation {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	
+	public String getStatuss() {
+		return stats[status];
+	}
+	
 	public String getBegDate() {
 		return begDate;
 	}
