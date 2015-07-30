@@ -66,6 +66,7 @@ public final class ScheduleView extends CssLayout implements View
 		}
 		ComboBox resourceTypeSelect = new ComboBox("Kaynak Tipleri", containertype);
 		resourceTypeSelect.setItemCaptionPropertyId("title");
+		resourceTypeSelect.setValue(containertype.getIdByIndex(0));
 		resourceTypeSelect.setImmediate(true);
 		
 		resourceTypeSelect.addValueChangeListener(new ValueChangeListener()
