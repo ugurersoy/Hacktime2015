@@ -1,5 +1,6 @@
 package com.logo.view.browsers;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,6 +10,7 @@ import org.vaadin.viritin.FilterableListContainer;
 import org.vaadin.viritin.form.AbstractForm.SavedHandler;
 
 import com.google.common.eventbus.Subscribe;
+import com.logo.domain.Reservation;
 import com.logo.domain.Resource;
 import com.logo.event.DashboardEvent.BrowserResizeEvent;
 import com.logo.event.DashboardEventBus;
@@ -108,6 +110,7 @@ public final class ResourcesView extends VerticalLayout implements View
 					public void onSave(Resource entity)
 					{
 						RestService.instance.persistResource(entity);
+						entity.setResourceTitle(entity.getTitle());
 						table.addItem(entity);
 						popup.close();
 						table.select(entity);
@@ -179,7 +182,7 @@ public final class ResourcesView extends VerticalLayout implements View
 		HorizontalLayout header = new HorizontalLayout();
 		header.setMargin(new MarginInfo(true, true, true, true));
 		header.addStyleName("viewheader");
-		header.setWidth("100%");
+//		header.setWidth("100%");
 		header.setSpacing(true);
 		Responsive.makeResponsive(header);
 
@@ -306,14 +309,19 @@ public final class ResourcesView extends VerticalLayout implements View
 		// table.setColumnCollapsible("price", false);
 
 		table.setColumnReorderingAllowed(true);
+		ArrayList<Resource> resources = RestService.instance.getResourceListDetail().getResources();
+		boolean empty = resources.isEmpty();
+        if (empty) {
+        	resources.add(new Resource());
+        }
 		table.setContainerDataSource(
-				new TempTransactionsContainer(RestService.instance.getResourceListDetail().getResources()));
-		table.setSortContainerPropertyId("title");
+				new TempTransactionsContainer(resources));
+		table.setSortContainerPropertyId("resourceTitle");
 		table.setSortAscending(false);
 
 		table.setColumnAlignment("capacity", Align.RIGHT);
 
-		table.setVisibleColumns("title", "capacity", "resourceTypeName");
+		table.setVisibleColumns("resourceTitle", "capacity", "resourceTypeName");
 		table.setColumnHeaders("Kaynak Adı", "Kapasite", "Kaynak Tipi");
 
 		table.setFooterVisible(true);
@@ -339,6 +347,9 @@ public final class ResourcesView extends VerticalLayout implements View
 		// }
 		// }
 		// });
+		if (empty) {
+        	table.removeAllItems();
+        }
 		table.setImmediate(true);
 
 		return table;

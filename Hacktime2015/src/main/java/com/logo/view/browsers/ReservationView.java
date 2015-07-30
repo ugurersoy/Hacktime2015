@@ -134,11 +134,15 @@ public final class ReservationView extends VerticalLayout implements View {
 					@Override
 					public void onSave(Reservation entity)
 					{
-						RestService.instance.persistReservation(entity);
-						table.addItem(entity);
-						popup.close();
-						table.select(entity);
-						table.setCurrentPageFirstItemId(entity);
+						if(RestService.instance.persistReservation(entity)){
+							table.addItem(entity);
+							popup.close();
+							table.select(entity);
+							table.setCurrentPageFirstItemId(entity);
+						}
+						else
+							Notification.show("Bu kaynak başkası tarafından rezerve edilmiştir.", Type.ERROR_MESSAGE);
+						
 					}
 				});
 			}
@@ -274,7 +278,7 @@ public final class ReservationView extends VerticalLayout implements View {
         HorizontalLayout header = new HorizontalLayout();
         header.addStyleName("viewheader");
         header.setSpacing(true);
-        header.setWidth("100%");
+//        header.setWidth("100%");
         header.setMargin(new MarginInfo(true, true, true, true));
         Responsive.makeResponsive(header);
 
@@ -284,6 +288,7 @@ public final class ReservationView extends VerticalLayout implements View {
         title.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 //        title.setIcon(icon);
         header.addComponent(title);
+        header.setComponentAlignment(title, Alignment.TOP_LEFT);
 
 //        createReport = buildCreateReport();
         HorizontalLayout tools = new HorizontalLayout(buildFilter());

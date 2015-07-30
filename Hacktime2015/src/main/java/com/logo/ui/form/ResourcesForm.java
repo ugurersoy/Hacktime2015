@@ -9,6 +9,9 @@ import com.logo.component.ComboBoxBean;
 import com.logo.domain.Resource;
 import com.logo.domain.ResourceTypes;
 import com.logo.rest.RestService;
+import com.sun.research.ws.wadl.ResourceType;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -42,6 +45,15 @@ public class ResourcesForm extends AbstractForm<Resource>
 		resourceSelect = new ComboBox("Kaynak Tipi", container);
 		resourceSelect.setItemCaptionPropertyId("title");
 		resourceSelect.setImmediate(true);
+		resourceSelect.addValueChangeListener(new ValueChangeListener()
+		{
+			@Override
+			public void valueChange(ValueChangeEvent event)
+			{
+				getEntity().setResourceType(((ResourceTypes)event.getProperty().getValue()).getId());
+				getEntity().setResourceTypeName(((ResourceTypes)event.getProperty().getValue()).getTitle());
+			}
+		});
 	}
 
 }
