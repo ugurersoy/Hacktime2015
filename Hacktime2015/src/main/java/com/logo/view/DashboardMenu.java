@@ -1,17 +1,13 @@
 package com.logo.view;
 
 import com.google.common.eventbus.Subscribe;
-import com.logo.HacktimeUI;
-import com.logo.component.ProfilePreferencesWindow;
 import com.logo.domain.User;
-import com.logo.event.DashboardEvent.NotificationsCountUpdatedEvent;
 import com.logo.event.DashboardEvent.PostViewChangeEvent;
 import com.logo.event.DashboardEvent.ProfileUpdatedEvent;
 import com.logo.event.DashboardEvent.ReportsCountUpdatedEvent;
 import com.logo.event.DashboardEvent.UserLoggedOutEvent;
 import com.logo.event.DashboardEventBus;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
@@ -156,7 +152,6 @@ public final class DashboardMenu extends CustomComponent {
     @Override
     public void attach() {
         super.attach();
-        updateNotificationsCount(null);
     }
 
     @Subscribe
@@ -165,14 +160,7 @@ public final class DashboardMenu extends CustomComponent {
         getCompositionRoot().removeStyleName(STYLE_VISIBLE);
     }
 
-    @Subscribe
-    public void updateNotificationsCount(
-            final NotificationsCountUpdatedEvent event) {
-        int unreadNotificationsCount = HacktimeUI.getDataProvider()
-                .getUnreadNotificationsCount();
-        notificationsBadge.setValue(String.valueOf(unreadNotificationsCount));
-        notificationsBadge.setVisible(unreadNotificationsCount > 0);
-    }
+
 
     @Subscribe
     public void updateReportsCount(final ReportsCountUpdatedEvent event) {
