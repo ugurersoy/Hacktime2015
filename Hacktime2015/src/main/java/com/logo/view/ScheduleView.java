@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import com.google.common.eventbus.Subscribe;
 import com.logo.domain.Reservation;
@@ -53,35 +52,6 @@ public final class ScheduleView extends CssLayout implements View
 		addComponent(tray);
 	}
 
-//	@Override
-//	public void detach()
-//	{
-//		super.detach();
-//		// A new instance of ScheduleView is created every time it's navigated
-//		// to so we'll need to clean up references to it on detach.
-//		DashboardEventBus.unregister(this);
-//	}
-
-//	private void injectMovieCoverStyles()
-//	{
-//		// Add all movie cover images as classes to CSSInject
-//		String styles = "";
-//		for (int i = 0; i < 10; i++)
-//		{
-//            WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
-//            String bg = "url(VAADIN/themes/" + UI.getCurrent().getTheme()
-//                    + "/img/event-title-bg.png), url(" + "" + ")";
-//            // IE8 doesn't support multiple background images
-//            if (webBrowser.isIE() && webBrowser.getBrowserMajorVersion() == 8) {
-//                bg = "url(" + "ajksdh" + ")";
-//            }
-//            styles += ".v-calendar-event-" + i
-//                    + " .v-calendar-event-content {background-image:" + bg
-//                    + ";}";
-//		}
-//		Page.getCurrent().getStyles().add(styles);
-//	}
-
 	private Component buildCalendarView()
 	{
 		VerticalLayout calendarLayout = new VerticalLayout();
@@ -123,58 +93,11 @@ public final class ScheduleView extends CssLayout implements View
 		calendar.setWidth(100.0f, Unit.PERCENTAGE);
 		calendar.setHeight(1000.0f, Unit.PIXELS);
 
-		// calendar.setHandler(new EventClickHandler() {
-		// @Override
-		// public void eventClick(final EventClick event) {
-		// setTrayVisible(false);
-		// MovieEvent movieEvent = (MovieEvent) event.getCalendarEvent();
-		// MovieDetailsWindow.open(movieEvent.getMovie(),
-		// movieEvent.getStart(), movieEvent.getEnd());
-		// }
-		// });
 		calendarLayout.addComponent(calendar);
 
 		calendar.setFirstVisibleHourOfDay(8);
 		calendar.setLastVisibleHourOfDay(7);
-//		calendar.setTimeZone(TimeZone.getTimeZone("Europe/Istanbul"));
 		calendar.setLocale(new Locale("tr", "TR"));
-//		TimeFormat tf = calendar.getTimeFormat();
-//		calendar.setTimeFormat(tf);
-		
-//		calendar.setHandler(new BasicEventMoveHandler()
-//		{
-//			@Override
-//			public void eventMove(final MoveEvent event)
-//			{
-//				CalendarEvent calendarEvent = event.getCalendarEvent();
-//				if (calendarEvent instanceof ReservationEvent)
-//				{
-//					ReservationEvent editableEvent = (ReservationEvent) calendarEvent;
-//
-//					Date newFromTime = event.getNewStart();
-//
-//					// Update event dates
-//					long length = editableEvent.getEnd().getTime() - editableEvent.getStart().getTime();
-//					setDates(editableEvent, newFromTime, new Date(newFromTime.getTime() + length));
-////					setTrayVisible(true);
-//				}
-//			}
-//
-//			protected void setDates(final ReservationEvent event, final Date start, final Date end)
-//			{
-//				event.start = start;
-//				event.end = end;
-//			}
-//		});
-//		calendar.setHandler(new BasicEventResizeHandler()
-//		{
-//			@Override
-//			public void eventResize(final EventResize event)
-//			{
-//				Notification.show("You're not allowed to change the movie duration");
-//			}
-//		});
-
 		java.util.Calendar initialView = java.util.Calendar.getInstance();
 		initialView.add(java.util.Calendar.DAY_OF_WEEK, -initialView.get(java.util.Calendar.DAY_OF_WEEK) + 1);
 		calendar.setStartDate(initialView.getTime());
@@ -200,48 +123,8 @@ public final class ScheduleView extends CssLayout implements View
 		tray.setComponentAlignment(warning, Alignment.MIDDLE_LEFT);
 		tray.setExpandRatio(warning, 1);
 
-//		ClickListener close = new ClickListener()
-//		{
-//			@Override
-//			public void buttonClick(final ClickEvent event)
-//			{
-//				setTrayVisible(false);
-//			}
-//		};
-
-//		Button confirm = new Button("Confirm");
-//		confirm.addStyleName(ValoTheme.BUTTON_PRIMARY);
-//		confirm.addClickListener(close);
-//		tray.addComponent(confirm);
-//		tray.setComponentAlignment(confirm, Alignment.MIDDLE_LEFT);
-//
-//		Button discard = new Button("Discard");
-//		discard.addClickListener(close);
-//		discard.addClickListener(new ClickListener()
-//		{
-//			@Override
-//			public void buttonClick(final ClickEvent event)
-//			{
-//				calendar.markAsDirty();
-//			}
-//		});
-//		tray.addComponent(discard);
-//		tray.setComponentAlignment(discard, Alignment.MIDDLE_LEFT);
 		return tray;
 	}
-
-//	private void setTrayVisible(final boolean visible)
-//	{
-//		final String styleReveal = "v-animate-reveal";
-//		if (visible)
-//		{
-//			tray.addStyleName(styleReveal);
-//		}
-//		else
-//		{
-//			tray.removeStyleName(styleReveal);
-//		}
-//	}
 
 	@Subscribe
 	public void browserWindowResized(final BrowserResizeEvent event)
@@ -283,7 +166,6 @@ public final class ScheduleView extends CssLayout implements View
 				}
 				java.util.Calendar cal = java.util.Calendar.getInstance();
 				cal.add(java.util.Calendar.HOUR, 1);
-//				result.add(new ReservationEvent(java.util.Calendar.getInstance().getTime(), cal.getTime(), reservation));
 				result.add(new ReservationEvent(begDate, endDate2, reservation));
 			}
 			return result;
