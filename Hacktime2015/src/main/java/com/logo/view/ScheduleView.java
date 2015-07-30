@@ -1,40 +1,27 @@
 package com.logo.view;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
-import com.logo.HacktimeUI;
-import com.logo.domain.Movie;
-import com.logo.domain.Transaction;
+import com.logo.domain.Reservation;
 import com.logo.event.DashboardEvent.BrowserResizeEvent;
-import com.logo.event.DashboardEventBus;
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.logo.rest.RestService;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
-import com.vaadin.server.WebBrowser;
-import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResize;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.MoveEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
@@ -46,7 +33,6 @@ import com.vaadin.ui.themes.ValoTheme;
 @SuppressWarnings("serial")
 public final class ScheduleView extends CssLayout implements View
 {
-
 	private Calendar calendar;
 	private final Component tray;
 
@@ -54,50 +40,48 @@ public final class ScheduleView extends CssLayout implements View
 	{
 		setSizeFull();
 		addStyleName("schedule");
-		DashboardEventBus.register(this);
+//		DashboardEventBus.register(this);
 
 		TabSheet tabs = new TabSheet();
 		tabs.setSizeFull();
 		tabs.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
-
 		tabs.addComponent(buildCalendarView());
-
 		addComponent(tabs);
 
 		tray = buildTray();
 		addComponent(tray);
 
-		injectMovieCoverStyles();
+//		injectMovieCoverStyles();
 	}
 
-	@Override
-	public void detach()
-	{
-		super.detach();
-		// A new instance of ScheduleView is created every time it's navigated
-		// to so we'll need to clean up references to it on detach.
-		DashboardEventBus.unregister(this);
-	}
+//	@Override
+//	public void detach()
+//	{
+//		super.detach();
+//		// A new instance of ScheduleView is created every time it's navigated
+//		// to so we'll need to clean up references to it on detach.
+//		DashboardEventBus.unregister(this);
+//	}
 
-	private void injectMovieCoverStyles()
-	{
-		// Add all movie cover images as classes to CSSInject
-		String styles = "";
-		for (int i = 0; i < 10; i++)
-		{
-            WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
-            String bg = "url(VAADIN/themes/" + UI.getCurrent().getTheme()
-                    + "/img/event-title-bg.png), url(" + "" + ")";
-            // IE8 doesn't support multiple background images
-            if (webBrowser.isIE() && webBrowser.getBrowserMajorVersion() == 8) {
-                bg = "url(" + "ajksdh" + ")";
-            }
-            styles += ".v-calendar-event-" + i
-                    + " .v-calendar-event-content {background-image:" + bg
-                    + ";}";
-		}
-		Page.getCurrent().getStyles().add(styles);
-	}
+//	private void injectMovieCoverStyles()
+//	{
+//		// Add all movie cover images as classes to CSSInject
+//		String styles = "";
+//		for (int i = 0; i < 10; i++)
+//		{
+//            WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
+//            String bg = "url(VAADIN/themes/" + UI.getCurrent().getTheme()
+//                    + "/img/event-title-bg.png), url(" + "" + ")";
+//            // IE8 doesn't support multiple background images
+//            if (webBrowser.isIE() && webBrowser.getBrowserMajorVersion() == 8) {
+//                bg = "url(" + "ajksdh" + ")";
+//            }
+//            styles += ".v-calendar-event-" + i
+//                    + " .v-calendar-event-content {background-image:" + bg
+//                    + ";}";
+//		}
+//		Page.getCurrent().getStyles().add(styles);
+//	}
 
 	private Component buildCalendarView()
 	{
@@ -120,8 +104,8 @@ public final class ScheduleView extends CssLayout implements View
 		// });
 		calendarLayout.addComponent(calendar);
 
-		calendar.setFirstVisibleHourOfDay(11);
-		calendar.setLastVisibleHourOfDay(23);
+		calendar.setFirstVisibleHourOfDay(8);
+		calendar.setLastVisibleHourOfDay(7);
 
 		calendar.setHandler(new BasicEventMoveHandler()
 		{
@@ -129,9 +113,9 @@ public final class ScheduleView extends CssLayout implements View
 			public void eventMove(final MoveEvent event)
 			{
 				CalendarEvent calendarEvent = event.getCalendarEvent();
-				if (calendarEvent instanceof MovieEvent)
+				if (calendarEvent instanceof ReservationEvent)
 				{
-					MovieEvent editableEvent = (MovieEvent) calendarEvent;
+					ReservationEvent editableEvent = (ReservationEvent) calendarEvent;
 
 					Date newFromTime = event.getNewStart();
 
@@ -142,20 +126,20 @@ public final class ScheduleView extends CssLayout implements View
 				}
 			}
 
-			protected void setDates(final MovieEvent event, final Date start, final Date end)
+			protected void setDates(final ReservationEvent event, final Date start, final Date end)
 			{
 				event.start = start;
 				event.end = end;
 			}
 		});
-//		calendar.setHandler(new BasicEventResizeHandler()
-//		{
-//			@Override
-//			public void eventResize(final EventResize event)
-//			{
-//				Notification.show("You're not allowed to change the movie duration");
-//			}
-//		});
+		calendar.setHandler(new BasicEventResizeHandler()
+		{
+			@Override
+			public void eventResize(final EventResize event)
+			{
+				Notification.show("You're not allowed to change the movie duration");
+			}
+		});
 
 		java.util.Calendar initialView = java.util.Calendar.getInstance();
 		initialView.add(java.util.Calendar.DAY_OF_WEEK, -initialView.get(java.util.Calendar.DAY_OF_WEEK) + 1);
@@ -182,33 +166,33 @@ public final class ScheduleView extends CssLayout implements View
 		tray.setComponentAlignment(warning, Alignment.MIDDLE_LEFT);
 		tray.setExpandRatio(warning, 1);
 
-		ClickListener close = new ClickListener()
-		{
-			@Override
-			public void buttonClick(final ClickEvent event)
-			{
-				setTrayVisible(false);
-			}
-		};
+//		ClickListener close = new ClickListener()
+//		{
+//			@Override
+//			public void buttonClick(final ClickEvent event)
+//			{
+//				setTrayVisible(false);
+//			}
+//		};
 
-		Button confirm = new Button("Confirm");
-		confirm.addStyleName(ValoTheme.BUTTON_PRIMARY);
-		confirm.addClickListener(close);
-		tray.addComponent(confirm);
-		tray.setComponentAlignment(confirm, Alignment.MIDDLE_LEFT);
-
-		Button discard = new Button("Discard");
-		discard.addClickListener(close);
-		discard.addClickListener(new ClickListener()
-		{
-			@Override
-			public void buttonClick(final ClickEvent event)
-			{
-				calendar.markAsDirty();
-			}
-		});
-		tray.addComponent(discard);
-		tray.setComponentAlignment(discard, Alignment.MIDDLE_LEFT);
+//		Button confirm = new Button("Confirm");
+//		confirm.addStyleName(ValoTheme.BUTTON_PRIMARY);
+//		confirm.addClickListener(close);
+//		tray.addComponent(confirm);
+//		tray.setComponentAlignment(confirm, Alignment.MIDDLE_LEFT);
+//
+//		Button discard = new Button("Discard");
+//		discard.addClickListener(close);
+//		discard.addClickListener(new ClickListener()
+//		{
+//			@Override
+//			public void buttonClick(final ClickEvent event)
+//			{
+//				calendar.markAsDirty();
+//			}
+//		});
+//		tray.addComponent(discard);
+//		tray.setComponentAlignment(discard, Alignment.MIDDLE_LEFT);
 		return tray;
 	}
 
@@ -245,33 +229,42 @@ public final class ScheduleView extends CssLayout implements View
 		@Override
 		public List<CalendarEvent> getEvents(final Date startDate, final Date endDate)
 		{
-			// Transactions are dynamically fetched from the backend service
-			// when needed.
-			Collection<Transaction> transactions = HacktimeUI.getDataProvider().getTransactionsBetween(startDate,
-					endDate);
+			// Transactions are dynamically fetched from the backend service when needed.
+			ArrayList<Reservation> reservations = RestService.instance.getScheduleList(1).getReservations();
 			List<CalendarEvent> result = new ArrayList<CalendarEvent>();
-			for (Transaction transaction : transactions)
+			
+			for (Reservation reservation : reservations)
 			{
-				Movie movie = HacktimeUI.getDataProvider().getMovie(transaction.getMovieId());
-				Date end = new Date(2015, 6, 29);
-				result.add(new MovieEvent(transaction.getTime(), end, movie));
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd hh:MM:ss");
+				Date begDate = null;
+				Date endDate2 = null;
+				try
+				{
+					begDate = formatter.parse(reservation.getBegDate());
+					endDate2 = formatter.parse(reservation.getEndDate());
+				}
+				catch (ParseException e)
+				{
+					e.printStackTrace();
+				}
+				result.add(new ReservationEvent(begDate, endDate2, reservation));
 			}
 			return result;
 		}
 	}
 
-	public final class MovieEvent implements CalendarEvent
+	public final class ReservationEvent implements CalendarEvent
 	{
 
 		private Date start;
 		private Date end;
-		private Movie movie;
+		private Reservation reservation;
 
-		public MovieEvent(final Date start, final Date end, final Movie movie)
+		public ReservationEvent(final Date start, final Date end, final Reservation resource)
 		{
 			this.start = start;
 			this.end = end;
-			this.movie = movie;
+			this.reservation = resource;
 		}
 
 		@Override
@@ -304,14 +297,14 @@ public final class ScheduleView extends CssLayout implements View
 			return false;
 		}
 
-		public Movie getMovie()
+		public Reservation getResource()
 		{
-			return movie;
+			return reservation;
 		}
 
-		public void setMovie(final Movie movie)
+		public void setResource(final Reservation resource)
 		{
-			this.movie = movie;
+			this.reservation = resource;
 		}
 
 		public void setStart(final Date start)
@@ -327,7 +320,7 @@ public final class ScheduleView extends CssLayout implements View
 		@Override
 		public String getCaption()
 		{
-			return "GodFather";
+			return reservation.getResourceName();
 		}
 
 	}

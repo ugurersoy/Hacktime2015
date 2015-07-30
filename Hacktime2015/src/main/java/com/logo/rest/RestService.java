@@ -79,6 +79,11 @@ public class RestService {
         		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token());
     }
     
+    public ReservationList getScheduleList(int resourceTypeId) {
+    	return getScheduleService(resourceTypeId).
+        		get(ReservationList.class);
+    }
+    
     public TokenResponse getTokenResponse(Token token) {
         return getTokenService().
         		post(Entity.entity(token.toString() ,MediaType.APPLICATION_FORM_URLENCODED_TYPE), TokenResponse.class);
@@ -140,6 +145,11 @@ public class RestService {
     public ResourceTypesList getResourceTypes() {
     	return getResourceTypeService().
         		get(ResourceTypesList.class);
+    }
+    
+    private Builder getScheduleService(int resourceTypeId){
+    	return target.path("ReservationDetails/"+resourceTypeId+"/CurrentReservations").queryParam("resourceTypeId", resourceTypeId)
+        		.request(MediaType.APPLICATION_JSON_TYPE).header("Authorization", TokenResponse.instance.getToken_type() + " " + TokenResponse.instance.getAccess_token());
     }
     
     public ReservationList getReservationsByUser(int userId){
