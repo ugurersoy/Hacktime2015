@@ -345,9 +345,14 @@ public final class ReservationView extends VerticalLayout implements View {
         	reservations = RestService.instance.getReservationList().getReservations();
         else
         	reservations = RestService.instance.getReservationsByUser(HacktimeUI.currentUser.getId()).getReservations();
+        boolean empty = reservations.isEmpty();
+        if (empty) {
+        	reservations.add(new Reservation());
+        }
         table.setContainerDataSource(new TempReservationContainer(reservations));
         table.setSortContainerPropertyId("name");
         table.setSortAscending(false);
+
 
 
         table.setVisibleColumns("name", "surname", "resourceName", "begDate", "endDate",
@@ -379,7 +384,9 @@ public final class ReservationView extends VerticalLayout implements View {
 //            }
 //        });
         table.setImmediate(true);
-
+        if (empty) {
+        	table.removeAllItems();
+        }
         return table;
     }
 
