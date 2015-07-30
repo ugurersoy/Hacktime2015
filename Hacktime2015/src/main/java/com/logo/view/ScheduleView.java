@@ -25,10 +25,15 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResize;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.MoveEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
+import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
+import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
@@ -115,7 +120,7 @@ public final class ScheduleView extends CssLayout implements View
 				resourceTypeIndex = res.getId();
 				MovieEventProvider mep = new MovieEventProvider();
 				mep.getEvents(null, null);
-				
+				calendar.setImmediate(true);
 			}
 		});
 		
@@ -162,7 +167,7 @@ public final class ScheduleView extends CssLayout implements View
 //					// Update event dates
 //					long length = editableEvent.getEnd().getTime() - editableEvent.getStart().getTime();
 //					setDates(editableEvent, newFromTime, new Date(newFromTime.getTime() + length));
-//					setTrayVisible(true);
+////					setTrayVisible(true);
 //				}
 //			}
 //
