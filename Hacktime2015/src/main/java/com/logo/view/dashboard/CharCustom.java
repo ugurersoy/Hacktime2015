@@ -161,6 +161,8 @@ public class CharCustom extends VerticalLayout implements View
 
 		table.setFooterVisible(true);
 		table.setDragMode(TableDragMode.MULTIROW);
+		table.setCurrentPageFirstItemId(table.getValue());
+		
 //		table.addActionHandler(new TransactionsActionHandler());
 		table.setImmediate(true);
 		if (empty)

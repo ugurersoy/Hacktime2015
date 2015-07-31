@@ -8,7 +8,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 
 public enum DashboardViewType {
-	DASHBOARD("çalışma Panosu", CharCustom.class, FontAwesome.HOME, true), 
+	DASHBOARD("çalışma Panosu", CharCustom.class, FontAwesome.HOME, false), 
     REZERVATION("rezervasyon",ReservationView.class,FontAwesome.LIST,false),
 	RESOURCES("kaynaklar",ResourcesView.class,FontAwesome.TABLE,false),
 	SCHEDULE("takvim", ScheduleView.class, FontAwesome.CALENDAR_O, false);
